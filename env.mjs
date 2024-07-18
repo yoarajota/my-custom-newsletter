@@ -7,8 +7,14 @@ export const env = createEnv({
       .enum(["true", "false"])
       .optional()
       .transform((value) => value === "true"),
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    SUPABASE_CLIENT_ROLE_KEY: process.env.SUPABASE_CLIENT_ROLE_KEY,
   },
-  client: {},
+  client: {
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+  },
   runtimeEnv: {
     ANALYZE: process.env.ANALYZE,
   },
