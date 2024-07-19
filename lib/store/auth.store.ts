@@ -1,9 +1,9 @@
-import { StateCreator, create } from "zustand"
+import { supabase } from "@supabase"
+import { toast } from "sonner"
+import { create, StateCreator } from "zustand"
 // Remova a importação do AuthService não utilizado
 import { devtools, persist } from "zustand/middleware"
-import { toast } from "sonner"
 // Importe o cliente Supabase configurado
-import { supabase } from "../../supabaseClient"
 
 export interface AuthState {
   status: AuthStatus
