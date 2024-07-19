@@ -1,7 +1,7 @@
 import { createEnv } from "@t3-oss/env-nextjs"
 import { z } from "zod"
 
-export const env = createEnv({
+const env = createEnv({
   server: {
     ANALYZE: z.string().toLowerCase().transform((x) => x === 'true').pipe(z.boolean()),
     SUPABASE_URL: z.string().url(),
@@ -18,3 +18,5 @@ export const env = createEnv({
     SUPABASE_CLIENT_ROLE_KEY: process.env.SUPABASE_CLIENT_ROLE_KEY,
   },
 })
+
+export default env
