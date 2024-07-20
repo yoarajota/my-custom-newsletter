@@ -1,13 +1,14 @@
 import { updateSession } from '@lib/supabase/middleware'
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import i18nMiddleware from './i18n/middleware';
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/") {
-    return NextResponse.next()
-  }
+  // return i18nRouter(request, i18nConfig);
 
-  return await updateSession(request)
+  // return await updateSession(request)
+
+  return i18nMiddleware(request)
 }
 
 export const config = {
