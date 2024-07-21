@@ -1,15 +1,7 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu"
 import Link from "next/link"
 import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
-import { Bell, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
+import { Bell, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { useTranslations } from "next-intl"
 import config from "app-config"
