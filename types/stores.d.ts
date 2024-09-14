@@ -9,6 +9,7 @@ type AuthState = {
 
 type AuthActions = {
   init: () => Promise<void>
+  signIn: (type: "google" | "email") => Promise<void>
 }
 
 export type UseAuth = AuthState & AuthActions

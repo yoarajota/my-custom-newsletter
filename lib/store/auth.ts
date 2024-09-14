@@ -2,6 +2,12 @@ import { create } from "zustand"
 import { supabase } from "@lib/supabase/client"
 import type { UseAuth } from "types/stores"
 
+async function googleSignIn() {
+  await supabase.auth.signInWithOAuth({
+    provider: "google",
+  })
+}
+
 const useAuth = create<UseAuth>((set, get) => ({
   user: null,
   session: null,
@@ -21,6 +27,12 @@ const useAuth = create<UseAuth>((set, get) => ({
     supabase.auth.onAuthStateChange((_event, session) => {
       set({ session })
     })
+  },
+
+  signIn: async (type = "google") => {
+    if (type === "google") {
+      await googleSignIn()
+    }
   },
 }))
 
