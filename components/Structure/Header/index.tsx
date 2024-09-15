@@ -1,3 +1,8 @@
+import { Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
+import Link from "next/link"
+import { Badge } from "@components/ui/badge"
+import { Button } from "@components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,15 +13,16 @@ import {
 } from "@components/ui/dropdown-menu"
 import { Input } from "@components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet"
-import Link from "next/link"
-import { Badge } from "@components/ui/badge"
-import { Button } from "@components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
+import { getUser } from "app/[locale]/actions"
 import config from "app-config"
+import UserMenu from "./UserMenu"
 const { app_name } = config
 
-export default function Header() {
+export default async function Header() {
+  const user = await getUser()
+
+  console.log(user)
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -98,10 +104,7 @@ export default function Header() {
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="size-5" />
-            <span className="sr-only">Toggle user menu</span>
-          </Button>
+          <UserMenu user={user} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>

@@ -1,6 +1,6 @@
-import { updateSession } from "@lib/supabase/middleware"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { updateSession } from "@lib/supabase/middleware"
 import i18nMiddleware from "./i18n/middleware"
 
 export async function middleware(request: NextRequest) {
@@ -24,7 +24,17 @@ export async function middleware(request: NextRequest) {
   })
 
   const i18nResponse = i18nMiddleware(request)
+
   if (i18nResponse) {
+    if (
+      i18nResponse.status === 302 ||
+      i18nResponse.status === 301 ||
+      i18nResponse.status === 307 ||
+      i18nResponse.status === 308
+    ) {
+      return i18nResponse
+    }
+
     i18nResponse.cookies.getAll().forEach(({ name, value, options }) => {
       combinedResponse.cookies.set(name, value, options)
       originalCookies.set(name, value)

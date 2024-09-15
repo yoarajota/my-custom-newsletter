@@ -13,13 +13,13 @@ export default function RootLayout({ children, params: { locale } }: Readonly<La
   const headersList = headers()
   const header_url = headersList.get("x-pathname") || ""
 
-  const isDashboard = header_url === `/${locale}`
+  const isHome = header_url === `/${locale}`
   const isAuthPath = header_url.includes("/auth")
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={cn("flex min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        {!isDashboard && !isAuthPath && <Layout>{children}</Layout>}
+        {!isHome && !isAuthPath && <Layout>{children}</Layout>}
 
         {isAuthPath && children}
       </body>
