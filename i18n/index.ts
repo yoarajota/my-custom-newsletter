@@ -5,7 +5,13 @@ const locales = ["en", "pt"]
 export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as any)) notFound()
 
+  const [common] = await Promise.all([import(`dictionaries/${locale}/common.json`)])
+
+  const messages = {
+    common: common.default,
+  }
+
   return {
-    messages: (await import(`dictionaries/${locale}.json`)).default,
+    messages,
   }
 })

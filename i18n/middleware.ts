@@ -9,8 +9,3 @@ export default createMiddleware({
   // Used when no locale matches
   defaultLocale: "en",
 })
-
-// export const config = {
-//   // Match only internationalized pathnames
-//   matcher: ["/", "/(pt|en)/:path*"],
-// }

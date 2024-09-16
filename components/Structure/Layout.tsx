@@ -1,7 +1,7 @@
 import Header from "@components/Structure/Header"
 import Main from "@components/Structure/Main"
 import Navbar from "@components/Structure/Navbar"
-import { ChildProps } from "types/common"
+import { ChildProps } from "@types/common"
 
 export default function Layout({ children }: ChildProps) {
   return (

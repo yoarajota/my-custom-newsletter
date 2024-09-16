@@ -25,10 +25,19 @@
       }
     ],
     "paths": {
-      "@lib/*": ["lib/*"],
+      "@lib/*": ["@lib/*"],
+      "@core/*": ["@core/*"],
       "@components/*": ["components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "types/**/*.d.ts", "**/*.mjs", "jest.config.js", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "types/**/*.d.ts",
+    "**/*.mjs",
+    "jest.config.js",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

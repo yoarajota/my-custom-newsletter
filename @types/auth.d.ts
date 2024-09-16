@@ -1,3 +1,5 @@
+import { User } from "@supabase/supabase-js"
+
 export type Account = {
   account_id: string
   account_role: "owner" | "member"
@@ -11,4 +13,9 @@ export type Account = {
   updated_at: string
   metadata: Record<string, string>
   current_active_account?: boolean
+}
+
+export type Auth = {
+  user: User | null,
+  account: Account | null,
 }

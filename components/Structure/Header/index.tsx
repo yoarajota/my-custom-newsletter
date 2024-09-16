@@ -13,15 +13,16 @@ import {
 } from "@components/ui/dropdown-menu"
 import { Input } from "@components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet"
-import { getUser } from "app/[locale]/actions"
+import { Auth } from "@types/auth"
+import { getAuth } from "app/[locale]/actions"
 import config from "app-config"
 import UserMenu from "./UserMenu"
 const { app_name } = config
 
 export default async function Header() {
-  const user = await getUser()
+  const auth: Auth = await getAuth()
 
-  console.log(user)
+  console.log(auth)
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -102,19 +103,7 @@ export default async function Header() {
           </div>
         </form>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <UserMenu user={user} />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <UserMenu auth={auth} />
     </header>
   )
 }
