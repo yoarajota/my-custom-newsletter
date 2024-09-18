@@ -16,8 +16,10 @@ export async function GET(request: Request) {
       const forwardedHost = request.headers.get("x-forwarded-host")
 
       if (env.ENV === "development") {
-        return NextResponse.redirect(`${origin}${next}`)
+        console.log(`${origin}${next}`)
+        return NextResponse.redirect(`${origin}${next}/dashboard`)
       } else if (forwardedHost) {
+        console.log(`https://${forwardedHost}${next}/dashboard`)
         return NextResponse.redirect(`https://${forwardedHost}${next}`)
       } else {
         return NextResponse.redirect(`${origin}${next}`)
