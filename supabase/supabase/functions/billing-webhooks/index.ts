@@ -20,6 +20,8 @@ const stripeResponse = stripeWebhookHandler({
 const webhookEndpoint = billingWebhooksWrapper(stripeResponse);
 
 serve(async (req) => {
+    console.log(Deno.env.get("STRIPE_WEBHOOK_SIGNING_SECRET"))
+
     const response = await webhookEndpoint(req);
     return response;
 });

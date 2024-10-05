@@ -19,3 +19,15 @@ export type Auth = {
   user: User | null,
   account: Account | null,
 }
+
+export type Plan = {
+  id: string
+  name: string,
+  description: string,
+  amount: number,
+  currency: string,
+  interval: string,
+  interval_count: number,
+  trial_period_days: number,
+  active: boolean
+}

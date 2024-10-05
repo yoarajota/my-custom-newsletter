@@ -1,14 +1,15 @@
+import { Bell, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react"
 import Link from "next/link"
 import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
-import { Bell, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { useTranslations } from "next-intl"
+import { getAccountPlans, subscribeToDefaultPlan } from "app/[locale]/actions"
 import config from "app-config"
+import { Auth } from "types/auth"
 const { app_name } = config
 
-export default function Navbar() {
-  const t = useTranslations("")
+export default async function Navbar({ auth }: { auth: Auth }) {
+  const accountPlans = await getAccountPlans()
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
@@ -63,19 +64,21 @@ export default function Navbar() {
             </Link>
           </nav>
         </div>
-        <div className="mt-auto p-4">
-          <Card x-chunk="dashboard-02-chunk-0">
-            <CardHeader className="p-2 pt-0 md:p-4">
-              <CardTitle>Upgrade to Pro</CardTitle>
-              <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-              <Button size="sm" className="w-full">
-                Upgrade
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {accountPlans?.length === 0 && (
+          <div className="mt-auto p-4">
+            <Card x-chunk="dashboard-02-chunk-0">
+              <CardHeader className="p-2 pt-0 md:p-4">
+                <CardTitle>Upgrade to Pro</CardTitle>
+                <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
+                <Button size="sm" className="w-full" onClick={() => subscribeToDefaultPlan(auth.account?.account_id)}>
+                  Upgrade
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   )

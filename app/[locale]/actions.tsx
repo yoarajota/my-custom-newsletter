@@ -2,7 +2,12 @@
 
 import { User } from "@supabase/supabase-js"
 import { createClient } from "@lib/supabase/server"
-import { Account, Auth } from "@types/auth"
+import env from "env.mjs"
+import { Account, Auth, Plan } from "types/auth"
+
+// START AUTH
+// START AUTH
+// START AUTH
 
 const state: {
   user: User | null
@@ -107,3 +112,89 @@ export async function getAuth() {
 
   return state.authPromise
 }
+
+// END AUTH
+// END AUTH
+// END AUTH
+
+// START BILLING
+// START BILLING
+// START BILLING
+
+const billingState: {
+  plans: Plan[] | null
+  accountPlansPromise: Promise<Plan[] | null> | null
+  accountPlans: Plan[] | null
+} = {
+  plans: null,
+  accountPlansPromise: null,
+  accountPlans: null,
+}
+
+export async function getAccountPlans() {
+  if (billingState.accountPlans) {
+    return billingState.accountPlans
+  }
+
+  if (billingState.accountPlansPromise) {
+    return billingState.accountPlansPromise
+  }
+
+  billingState.accountPlansPromise = new Promise(async (resolve, reject) => {
+    try {
+      await getAuth()
+
+      const supabase = createClient()
+
+      const { data, error } = await supabase.functions.invoke("billing-functions", {
+        body: {
+          action: "get_plans",
+          args: {
+            account_id: state.auth.account?.account_id,
+          },
+        },
+      })
+
+      if (error) {
+        throw error
+      }
+
+      billingState.plans = data
+
+      billingState.accountPlans = data.filter((plan: any) => plan.active)
+
+      resolve(billingState.accountPlans)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    } finally {
+      billingState.accountPlansPromise = null
+    }
+  })
+
+  return billingState.accountPlansPromise
+}
+
+export async function subscribeToDefaultPlan(account_id: string | undefined) {
+  if (!account_id) {
+    return
+  }
+
+  const supabase = createClient()
+
+  const { data, error } = await supabase.functions.invoke("billing-functions", {
+    body: {
+      action: "get_billing_portal_url",
+      args: {
+        account_id,
+        return_url: env.NEXT_PUBLIC_APP_URL,
+      },
+    },
+  })
+
+  console.log(data)
+}
+
+// END BILLING
+// END BILLING
+// END BILLING

@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu"
-import { Auth } from "@types/auth"
+import { Auth } from "types/auth"
 
 export default function UserMenu({ auth }: { auth: Auth }) {
   const { user, account } = auth

@@ -26,15 +26,16 @@
     ],
     "paths": {
       "@lib/*": ["@lib/*"],
-      "@core/*": ["@core/*"],
-      "@components/*": ["components/*"]
+      "@core/*": ["core/*"],
+      "@components/*": ["components/*"],
+      "types/*": ["types/*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
+    "**/*.d.ts",
     "**/*.tsx",
-    "types/**/*.d.ts",
     "**/*.mjs",
     "jest.config.js",
     ".next/types/**/*.ts"
