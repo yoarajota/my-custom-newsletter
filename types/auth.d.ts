@@ -16,18 +16,28 @@ export type Account = {
 }
 
 export type Auth = {
-  user: User | null,
-  account: Account | null,
+  user: User | null
+  account: Account | null
 }
 
 export type Plan = {
   id: string
-  name: string,
-  description: string,
-  amount: number,
-  currency: string,
-  interval: string,
-  interval_count: number,
-  trial_period_days: number,
+  name: string
+  description: string
+  amount: number
+  currency: string
+  interval: string
+  interval_count: number
+  trial_period_days: number
   active: boolean
+}
+
+export type BillingStatus = {
+  subscription_id: string
+  subscription_active: boolean
+  status: "active" | "trialing" | "past_due" | "canceled" | "unpaid" | "incomplete" | "incomplete_expired"
+  billing_email: string
+  account_role: string
+  is_primary_owner: boolean
+  billing_enabled: boolean
 }

@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation"
 import Header from "@components/Structure/Header"
 import Main from "@components/Structure/Main"
 import Navbar from "@components/Structure/Navbar"

@@ -3,13 +3,14 @@ import Link from "next/link"
 import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { getAccountPlans, subscribeToDefaultPlan } from "app/[locale]/actions"
+import { getBillingStatus, subscribeToDefaultPlan } from "app/[locale]/actions"
 import config from "app-config"
 import { Auth } from "types/auth"
+import UpgradeButton from "./UpgradeButton"
 const { app_name } = config
 
 export default async function Navbar({ auth }: { auth: Auth }) {
-  const accountPlans = await getAccountPlans()
+  const { subscription_active } = await getBillingStatus()
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
@@ -64,7 +65,7 @@ export default async function Navbar({ auth }: { auth: Auth }) {
             </Link>
           </nav>
         </div>
-        {accountPlans?.length === 0 && (
+        {!subscription_active && (
           <div className="mt-auto p-4">
             <Card x-chunk="dashboard-02-chunk-0">
               <CardHeader className="p-2 pt-0 md:p-4">
@@ -72,9 +73,7 @@ export default async function Navbar({ auth }: { auth: Auth }) {
                 <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
               </CardHeader>
               <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-                <Button size="sm" className="w-full" onClick={() => subscribeToDefaultPlan(auth.account?.account_id)}>
-                  Upgrade
-                </Button>
+                <UpgradeButton accountId={auth.account?.account_id} />
               </CardContent>
             </Card>
           </div>

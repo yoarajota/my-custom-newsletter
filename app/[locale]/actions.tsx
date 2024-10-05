@@ -3,7 +3,7 @@
 import { User } from "@supabase/supabase-js"
 import { createClient } from "@lib/supabase/server"
 import env from "env.mjs"
-import { Account, Auth, Plan } from "types/auth"
+import { Account, Auth, BillingStatus, Plan } from "types/auth"
 
 // START AUTH
 // START AUTH
@@ -123,24 +123,63 @@ export async function getAuth() {
 
 const billingState: {
   plans: Plan[] | null
-  accountPlansPromise: Promise<Plan[] | null> | null
-  accountPlans: Plan[] | null
+  plansPromise: Promise<Plan[] | null> | null
+  billingStatus: BillingStatus | null
+  billingStatusPromise: Promise<Plan[] | null> | null
 } = {
   plans: null,
-  accountPlansPromise: null,
-  accountPlans: null,
+  plansPromise: null,
+  billingStatus: null,
+  billingStatusPromise: null,
 }
 
-export async function getAccountPlans() {
-  if (billingState.accountPlans) {
-    return billingState.accountPlans
+export async function getPlans() {
+  if (billingState.plans) {
+    return billingState.plans
   }
 
-  if (billingState.accountPlansPromise) {
-    return billingState.accountPlansPromise
+  if (billingState.plansPromise) {
+    return billingState.plansPromise
   }
 
-  billingState.accountPlansPromise = new Promise(async (resolve, reject) => {
+  billingState.plansPromise = new Promise(async (resolve, reject) => {
+    try {
+      const supabase = createClient()
+
+      const { data, error } = await supabase.functions.invoke("billing-functions", {
+        body: {
+          action: "get_plans",
+        },
+      })
+
+      if (error) {
+        throw error
+      }
+
+      billingState.plans = data
+
+      resolve(billingState.plans)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    } finally {
+      billingState.plansPromise = null
+    }
+  })
+
+  return billingState.plansPromise
+}
+
+export async function getBillingStatus() {
+  if (billingState.billingStatus) {
+    return billingState.billingStatus
+  }
+
+  if (billingState.billingStatusPromise) {
+    return billingState.billingStatusPromise
+  }
+
+  billingState.billingStatusPromise = new Promise(async (resolve, reject) => {
     try {
       await getAuth()
 
@@ -148,7 +187,7 @@ export async function getAccountPlans() {
 
       const { data, error } = await supabase.functions.invoke("billing-functions", {
         body: {
-          action: "get_plans",
+          action: "get_billing_status",
           args: {
             account_id: state.auth.account?.account_id,
           },
@@ -161,18 +200,16 @@ export async function getAccountPlans() {
 
       billingState.plans = data
 
-      billingState.accountPlans = data.filter((plan: any) => plan.active)
-
-      resolve(billingState.accountPlans)
+      resolve(billingState.plans)
     } catch (error) {
       console.log(error)
       reject(error)
     } finally {
-      billingState.accountPlansPromise = null
+      billingState.plansPromise = null
     }
   })
 
-  return billingState.accountPlansPromise
+  return billingState.plansPromise
 }
 
 export async function subscribeToDefaultPlan(account_id: string | undefined) {
@@ -182,17 +219,20 @@ export async function subscribeToDefaultPlan(account_id: string | undefined) {
 
   const supabase = createClient()
 
+  const url = env.NEXT_PUBLIC_APP_URL + "/dashboard"
+
   const { data, error } = await supabase.functions.invoke("billing-functions", {
     body: {
-      action: "get_billing_portal_url",
+      action: "get_new_subscription_url",
       args: {
         account_id,
-        return_url: env.NEXT_PUBLIC_APP_URL,
+        success_url: url,
+        cancel_url: url,
       },
     },
   })
 
-  console.log(data)
+  return data.url
 }
 
 // END BILLING
