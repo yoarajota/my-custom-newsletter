@@ -320,3 +320,6 @@ This project is licensed under the MIT License. For more information, see the [L
 [github-contributors-badge-link]: https://github.com/Blazity/next-enterprise/graphs/contributors
 [discord-badge-link]: https://blazity.com/discord
 [made-by-blazity-badge-link]: https://blazity.com/?utm_source=nextenterprise&utm_medium=github
+
+<!-- STRIPE WEBHOOK -->
+J:\jota_\Documents\stripe_1.21.8_windows_x86_64\stripe.exe listen --forward-to localhost:54321/functions/v1/billing-webhooks

@@ -125,7 +125,7 @@ const billingState: {
   plans: Plan[] | null
   plansPromise: Promise<Plan[] | null> | null
   billingStatus: BillingStatus | null
-  billingStatusPromise: Promise<Plan[] | null> | null
+  billingStatusPromise: Promise<BillingStatus | null> | null
 } = {
   plans: null,
   plansPromise: null,
@@ -198,18 +198,18 @@ export async function getBillingStatus() {
         throw error
       }
 
-      billingState.plans = data
+      billingState.billingStatus = data
 
-      resolve(billingState.plans)
+      resolve(billingState.billingStatus)
     } catch (error) {
       console.log(error)
       reject(error)
     } finally {
-      billingState.plansPromise = null
+      billingState.billingStatusPromise = null
     }
   })
 
-  return billingState.plansPromise
+  return billingState.billingStatusPromise
 }
 
 export async function subscribeToDefaultPlan(account_id: string | undefined) {
