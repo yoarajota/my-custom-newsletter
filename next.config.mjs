@@ -24,6 +24,7 @@ const config = withPlugins([[withBundleAnalyzer({ enabled: env.ANALYZE })]], {
       { source: "/ping", destination: "/api/health" },
     ]
   },
+  exclude: ["supabase/"]
 })
 
 export default withNextIntl(config)

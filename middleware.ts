@@ -35,8 +35,8 @@ export async function middleware(request: NextRequest) {
       return i18nResponse
     }
 
-    i18nResponse.cookies.getAll().forEach(({ name, value, options }) => {
-      combinedResponse.cookies.set(name, value, options)
+    i18nResponse.cookies.getAll().forEach(({ name, value }) => {
+      combinedResponse.cookies.set(name, value)
       originalCookies.set(name, value)
     })
 
@@ -58,9 +58,9 @@ export async function middleware(request: NextRequest) {
       return updatedSessionResponse
     }
 
-    updatedSessionResponse.cookies.getAll().forEach(({ name, value, options }) => {
+    updatedSessionResponse.cookies.getAll().forEach(({ name, value }) => {
       if (!originalCookies.has(name) || originalCookies.get(name) !== value) {
-        combinedResponse.cookies.set(name, value, options)
+        combinedResponse.cookies.set(name, value)
       }
     })
     updatedSessionResponse.headers.forEach((value, key) => {
