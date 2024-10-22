@@ -1,11 +1,12 @@
 "use server"
 
 import { getLocale } from "next-intl/server"
+import env from "env.mjs"
 
 export const getWithLocaleURL = async (path: string) => {
   const locale = await getLocale()
 
-  let url = process?.env?.NEXT_PUBLIC_APP_URL ?? process?.env?.NEXT_PUBLIC_VERCEL_URL ?? "http://localhost:3000"
+  let url = env?.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
   url = url.startsWith("http") ? url : `https://${url}`
 
@@ -21,7 +22,7 @@ export const getWithLocaleURL = async (path: string) => {
 }
 
 export const getApiURL = (path: string) => {
-  let url = process?.env?.NEXT_PUBLIC_APP_URL ?? process?.env?.NEXT_PUBLIC_VERCEL_URL ?? "http://localhost:3000"
+  let url = env?.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
   url = url.startsWith("http") ? url : `https://${url}`
 
