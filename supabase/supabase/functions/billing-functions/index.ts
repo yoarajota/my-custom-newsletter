@@ -18,7 +18,7 @@ const stripeHandler = stripeFunctionHandler({
 })
 
 const billingEndpoint = billingFunctionsWrapper(stripeHandler, {
-  allowedURLs: ["http://localhost:3000"],
+  allowedURLs: [Deno.env.get("ALLOWED_BILLING_URL") ?? "http://localhost:3000"],
 })
 
 serve(async (req) => {
