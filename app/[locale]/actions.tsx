@@ -154,7 +154,7 @@ export async function getPlans() {
 
       if (error) {
         console.log(error)
-        console.log(await error.response.text())
+        console.log(await error.body)
 
         throw error
       }
@@ -199,7 +199,7 @@ export async function getBillingStatus() {
 
       if (error) {
         console.log(error)
-        console.log(await error.response.text())
+        console.log(await error.body)
 
         throw error
       }
