@@ -7,7 +7,7 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
-  if (request.nextUrl && (request.nextUrl.pathname === "/en" || request.nextUrl.pathname === "/pt-BR")) {
+  if (request.nextUrl && (request.nextUrl.pathname === "/en-US" || request.nextUrl.pathname === "/pt-BR")) {
     return supabaseResponse;
 }
 
@@ -44,7 +44,7 @@ export async function updateSession(request: NextRequest) {
     if (requestLocationHeader.includes("/pt-BR/")) {
       url.pathname = "/pt-BR/auth"
     } else {
-      url.pathname = "/en/auth"
+      url.pathname = "/en-US/auth"
     }
 
     return NextResponse.redirect(url)
