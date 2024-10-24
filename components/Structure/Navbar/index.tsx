@@ -1,4 +1,5 @@
 import { Bell, Home, LineChart, LucideIcon, Package, Package2, ShoppingCart, Users } from "lucide-react"
+import { headers } from "next/headers"
 import Link from "next/link"
 import { memo } from "react"
 import { Badge } from "@components/ui/badge"
@@ -24,6 +25,8 @@ const NavItem = memo(
     href: string
     badge?: number
   }) => {
+    console.log(active)
+
     return (
       <Link
         href={href}
@@ -49,6 +52,10 @@ NavItem.displayName = "NavItem"
 export default async function Navbar({ auth }: { auth: Auth }) {
   const billingStatus = await getBillingStatus()
 
+  const heads = headers()
+
+  const url = heads.get('referer')
+
   let subscriptionActive: boolean = false
 
   if (billingStatus) {
@@ -59,29 +66,29 @@ export default async function Navbar({ auth }: { auth: Auth }) {
     {
       Icon: Home,
       title: "Dashboard",
-      href: "/",
+      href: "/dashboard",
     },
-    {
-      Icon: ShoppingCart,
-      title: "Orders",
-      href: "/orders",
-      badge: 6,
-    },
-    {
-      Icon: Package,
-      title: "Products",
-      href: "/products",
-    },
-    {
-      Icon: Users,
-      title: "Customers",
-      href: "/customers",
-    },
-    {
-      Icon: LineChart,
-      title: "Analytics",
-      href: "/analytics",
-    },
+    // {
+    //   Icon: ShoppingCart,
+    //   title: "Orders",
+    //   href: "/orders",
+    //   badge: 6,
+    // },
+    // {
+    //   Icon: Package,
+    //   title: "Products",
+    //   href: "/products",
+    // },
+    // {
+    //   Icon: Users,
+    //   title: "Customers",
+    //   href: "/customers",
+    // },
+    // {
+    //   Icon: LineChart,
+    //   title: "Analytics",
+    //   href: "/analytics",
+    // },
   ]
 
   return (
@@ -100,15 +107,8 @@ export default async function Navbar({ auth }: { auth: Auth }) {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             {navItems.map((item, index) => (
-              <NavItem key={index} {...item} />
+              <NavItem key={index} {...item} active={url?.includes(item.href)} />
             ))}
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Home className="size-4" />
-              Dashboard
-            </Link>
           </nav>
         </div>
         {!subscriptionActive && (

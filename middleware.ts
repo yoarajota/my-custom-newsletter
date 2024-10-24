@@ -25,6 +25,9 @@ export async function middleware(request: NextRequest) {
 
   const i18nResponse = i18nMiddleware(request)
 
+  // console accept-language header
+  console.log(request.headers.get("accept-language"))
+
   if (i18nResponse) {
     if (
       i18nResponse.status === 302 ||
