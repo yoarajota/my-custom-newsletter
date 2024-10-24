@@ -37,8 +37,8 @@ export async function updateSession(request: NextRequest) {
 
     const requestLocationHeader = String(supabaseResponse.headers.get("x-middleware-request-location"))
 
-    if (requestLocationHeader.includes("/pt/")) {
-      url.pathname = "/pt/auth"
+    if (requestLocationHeader.includes("/pt-BR/")) {
+      url.pathname = "/pt-BR/auth"
     } else {
       url.pathname = "/en/auth"
     }
