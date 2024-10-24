@@ -39,9 +39,9 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = "/"
 
-    const requestLocationHeader = String(supabaseResponse.headers.get("x-middleware-request-location"))
+    const requestLocationHeader = String(supabaseResponse.headers.get("x-middleware-request-x-pathname"))
 
-    if (requestLocationHeader.includes("/pt-BR/")) {
+    if (requestLocationHeader.includes("/pt-BR")) {
       url.pathname = "/pt-BR/auth"
     } else {
       url.pathname = "/en-US/auth"
