@@ -5,6 +5,8 @@ import { getAuth } from "app/[locale]/actions"
 import { Auth } from "types/auth"
 import { ChildProps } from "types/common"
 
+export const dynamic = 'force-dynamic'
+
 export default async function DefaultLayout({ children }: ChildProps) {
   const auth: Auth = await getAuth()
 
