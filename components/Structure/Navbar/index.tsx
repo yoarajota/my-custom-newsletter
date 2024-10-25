@@ -11,38 +11,35 @@ import { Auth } from "types/auth"
 import UpgradeButton from "./UpgradeButton"
 const { app_name } = config
 
-const NavItem = memo(
-  ({
-    Icon,
-    title, 
-    active,
-    href,
-    badge,
-  }: {
-    Icon: LucideIcon
-    title: string
-    active?: boolean
-    href: string
-    badge?: number
-  }) => {
-    return (
-      <Link
-        href={href}
-        className={
-          "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary" +
-          (active ? " text-primary" : " text-muted-foreground")
-        }
-      >
-        {Icon && <Icon className="size-4" />}
-        <>{title}</>
-        {badge && (
-          <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">{badge}</Badge>
-        )}
-      </Link>
-    )
-  },
-  (prevProps, nextProps) => prevProps.active === nextProps.active
-)
+const NavItem = ({
+  Icon,
+  title,
+  active,
+  href,
+  badge,
+}: {
+  Icon: LucideIcon
+  title: string
+  active?: boolean
+  href: string
+  badge?: number
+}) => {
+  return (
+    <Link
+      href={href}
+      className={
+        "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary" +
+        (active ? " text-primary" : " text-muted-foreground")
+      }
+    >
+      {Icon && <Icon className="size-4" />}
+      <>{title}</>
+      {badge && (
+        <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">{badge}</Badge>
+      )}
+    </Link>
+  )
+}
 
 // Definindo o displayName para o componente memoizado
 NavItem.displayName = "NavItem"
@@ -52,7 +49,7 @@ export default async function Navbar({ auth }: { auth: Auth }) {
 
   const heads = headers()
 
-  const url = heads.get('referer')
+  const url = heads.get("referer")
 
   let subscriptionActive: boolean = false
 
