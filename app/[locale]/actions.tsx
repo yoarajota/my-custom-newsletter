@@ -28,7 +28,7 @@ import { Account, Auth, BillingStatus, Plan } from "types/auth"
 //   authPromise: null,
 // }
 
-export async function getUser() {
+export async function getUser(): Promise<User | null> {
   // if (state.user) {
   //   return state.user
   // }
@@ -44,12 +44,12 @@ export async function getUser() {
 
       const {
         data: { user },
-      } = await supabase.auth.getUser()
+      }: { data: { user: User | null } } = await supabase.auth.getUser()
 
       // state.user = user
       resolve(user)
     } catch (error) {
-      reject(error)
+      reject(null)
     } finally {
       // state.userPromise = null
     }
@@ -58,7 +58,7 @@ export async function getUser() {
   // return state.userPromise
 }
 
-export async function getAccounts() {
+export async function getAccounts(): Promise<Account[]> {
   // if (state.accounts) {
   //   return state.accounts
   // }
@@ -78,7 +78,7 @@ export async function getAccounts() {
 
       resolve(data)
     } catch (error) {
-      reject(error)
+      reject([])
     } finally {
       // state.accountsPromise = null
     }
@@ -87,7 +87,7 @@ export async function getAccounts() {
   // return state.accountsPromise
 }
 
-export async function getAuth() {
+export async function getAuth(): Promise<Auth> {
   // if (state.auth && state.auth.user && state.auth.account) {
   //   return state.auth
   // }
@@ -99,7 +99,7 @@ export async function getAuth() {
   // state.authPromise = new Promise(async (resolve, reject) => {
   return await new Promise(async (resolve, reject) => {
     try {
-      const [user, accounts] = await Promise.all([getUser(), getAccounts()])
+      const [user, accounts]: [User | null, Account[]] = await Promise.all([getUser(), getAccounts()])
 
       // state.auth = { user, account: accounts?.[0] ?? null }
 
@@ -109,7 +109,7 @@ export async function getAuth() {
     } catch (error) {
       console.log(error)
 
-      reject(error)
+      reject(null)
     } finally {
       // state.authPromise = null
     }
@@ -172,7 +172,7 @@ export async function getPlans() {
       resolve(data)
     } catch (error) {
       console.log(error)
-      reject(error)
+      reject(null)
     } finally {
       // billingState.plansPromise = null
     }
@@ -181,7 +181,7 @@ export async function getPlans() {
   // return billingState.plansPromise
 }
 
-export async function getBillingStatus() {
+export async function getBillingStatus(): Promise<BillingStatus> {
   console.log("getBillingStatus")
 
   // if (billingState.billingStatus) {
@@ -195,7 +195,7 @@ export async function getBillingStatus() {
   // billingState.billingStatusPromise = new Promise(async (resolve, reject) => {
   return await new Promise(async (resolve, reject) => {
     try {
-      const auth = await getAuth()
+      const auth: Auth = await getAuth()
 
       const supabase = createClient()
 
@@ -224,7 +224,7 @@ export async function getBillingStatus() {
       resolve(data)
     } catch (error) {
       console.log(error)
-      reject(error)
+      reject(null)
     } finally {
       // billingState.billingStatusPromise = null
     }
