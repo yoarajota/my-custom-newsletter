@@ -9,35 +9,36 @@ import { Account, Auth, BillingStatus, Plan } from "types/auth"
 // START AUTH
 // START AUTH
 
-const state: {
-  user: User | null
-  userPromise: Promise<User | null> | null
-  accounts: Array<Account> | null
-  accountsPromise: Promise<Array<Account> | null> | null
-  auth: Auth
-  authPromise: Promise<Auth> | null
-} = {
-  user: null,
-  userPromise: null,
-  accounts: null,
-  accountsPromise: null,
-  auth: {
-    user: null,
-    account: null,
-  },
-  authPromise: null,
-}
+// const state: {
+//   user: User | null
+//   userPromise: Promise<User | null> | null
+//   accounts: Array<Account> | null
+//   accountsPromise: Promise<Array<Account> | null> | null
+//   auth: Auth
+//   authPromise: Promise<Auth> | null
+// } = {
+//   user: null,
+//   userPromise: null,
+//   accounts: null,
+//   accountsPromise: null,
+//   auth: {
+//     user: null,
+//     account: null,
+//   },
+//   authPromise: null,
+// }
 
 export async function getUser() {
-  if (state.user) {
-    return state.user
-  }
+  // if (state.user) {
+  //   return state.user
+  // }
 
-  if (state.userPromise) {
-    return state.userPromise
-  }
+  // if (state.userPromise) {
+  //   return state.userPromise
+  // }
 
-  state.userPromise = new Promise(async (resolve, reject) => {
+  // state.userPromise = new Promise(async (resolve, reject) => {
+  return await new Promise(async (resolve, reject) => {
     try {
       const supabase = createClient()
 
@@ -45,72 +46,76 @@ export async function getUser() {
         data: { user },
       } = await supabase.auth.getUser()
 
-      state.user = user
+      // state.user = user
       resolve(user)
     } catch (error) {
       reject(error)
     } finally {
-      state.userPromise = null
+      // state.userPromise = null
     }
   })
 
-  return state.userPromise
+  // return state.userPromise
 }
 
 export async function getAccounts() {
-  if (state.accounts) {
-    return state.accounts
-  }
+  // if (state.accounts) {
+  //   return state.accounts
+  // }
 
-  if (state.accountsPromise) {
-    return state.accountsPromise
-  }
+  // if (state.accountsPromise) {
+  //   return state.accountsPromise
+  // }
 
-  state.accountsPromise = new Promise(async (resolve, reject) => {
+  // state.accountsPromise = new Promise(async (resolve, reject) => {
+  return await new Promise(async (resolve, reject) => {
     try {
       const supabase = createClient()
 
       const { data } = await supabase.rpc("get_accounts")
 
-      state.accounts = data
+      // state.accounts = data
 
       resolve(data)
     } catch (error) {
       reject(error)
     } finally {
-      state.accountsPromise = null
+      // state.accountsPromise = null
     }
   })
 
-  return state.accountsPromise
+  // return state.accountsPromise
 }
 
 export async function getAuth() {
-  if (state.auth && state.auth.user && state.auth.account) {
-    return state.auth
-  }
+  // if (state.auth && state.auth.user && state.auth.account) {
+  //   return state.auth
+  // }
 
-  if (state.authPromise) {
-    return state.authPromise
-  }
+  // if (state.authPromise) {
+  //   return state.authPromise
+  // }
 
-  state.authPromise = new Promise(async (resolve, reject) => {
+  // state.authPromise = new Promise(async (resolve, reject) => {
+  return await new Promise(async (resolve, reject) => {
     try {
       const [user, accounts] = await Promise.all([getUser(), getAccounts()])
 
-      state.auth = { user, account: accounts?.[0] ?? null }
+      // state.auth = { user, account: accounts?.[0] ?? null }
 
-      resolve(state.auth)
+      // resolve(state.auth)
+
+      resolve({ user, account: accounts?.[0] ?? null })
     } catch (error) {
       console.log(error)
 
       reject(error)
     } finally {
-      state.authPromise = null
+      // state.authPromise = null
     }
   })
 
-  return state.authPromise
+  // return state.authPromise
 }
 
 // END AUTH
@@ -121,28 +126,29 @@ export async function getAuth() {
 // START BILLING
 // START BILLING
 
-const billingState: {
-  plans: Plan[] | null
-  plansPromise: Promise<Plan[] | null> | null
-  billingStatus: BillingStatus | null
-  billingStatusPromise: Promise<BillingStatus | null> | null
-} = {
-  plans: null,
-  plansPromise: null,
-  billingStatus: null,
-  billingStatusPromise: null,
-}
+// const billingState: {
+//   plans: Plan[] | null
+//   plansPromise: Promise<Plan[] | null> | null
+//   billingStatus: BillingStatus | null
+//   billingStatusPromise: Promise<BillingStatus | null> | null
+// } = {
+//   plans: null,
+//   plansPromise: null,
+//   billingStatus: null,
+//   billingStatusPromise: null,
+// }
 
 export async function getPlans() {
-  if (billingState.plans) {
-    return billingState.plans
-  }
+  // if (billingState.plans) {
+  //   return billingState.plans
+  // }
 
-  if (billingState.plansPromise) {
-    return billingState.plansPromise
-  }
+  // if (billingState.plansPromise) {
+  //   return billingState.plansPromise
+  // }
 
-  billingState.plansPromise = new Promise(async (resolve, reject) => {
+  // billingState.plansPromise = new Promise(async (resolve, reject) => {
+  return await new Promise(async (resolve, reject) => {
     try {
       const supabase = createClient()
 
@@ -159,32 +165,37 @@ export async function getPlans() {
         throw error
       }
 
-      billingState.plans = data
+      // billingState.plans = data
 
-      resolve(billingState.plans)
+      // resolve(billingState.plans)
+
+      resolve(data)
     } catch (error) {
       console.log(error)
       reject(error)
     } finally {
-      billingState.plansPromise = null
+      // billingState.plansPromise = null
     }
   })
 
-  return billingState.plansPromise
+  // return billingState.plansPromise
 }
 
 export async function getBillingStatus() {
-  if (billingState.billingStatus) {
-    return billingState.billingStatus
-  }
+  console.log("getBillingStatus")
 
-  if (billingState.billingStatusPromise) {
-    return billingState.billingStatusPromise
-  }
+  // if (billingState.billingStatus) {
+  //   return billingState.billingStatus
+  // }
 
-  billingState.billingStatusPromise = new Promise(async (resolve, reject) => {
+  // if (billingState.billingStatusPromise) {
+  //   return billingState.billingStatusPromise
+  // }
+
+  // billingState.billingStatusPromise = new Promise(async (resolve, reject) => {
+  return await new Promise(async (resolve, reject) => {
     try {
-      await getAuth()
+      const auth = await getAuth()
 
       const supabase = createClient()
 
@@ -192,10 +203,12 @@ export async function getBillingStatus() {
         body: {
           action: "get_billing_status",
           args: {
-            account_id: state.auth.account?.account_id,
+            account_id: auth.account?.account_id,
           },
         },
       })
+
+      console.log("data", data)
 
       if (error) {
         console.log(error)
@@ -204,18 +217,20 @@ export async function getBillingStatus() {
         throw error
       }
 
-      billingState.billingStatus = data
+      // billingState.billingStatus = data
 
-      resolve(billingState.billingStatus)
+      // resolve(billingState.billingStatus)
+
+      resolve(data)
     } catch (error) {
       console.log(error)
       reject(error)
     } finally {
-      billingState.billingStatusPromise = null
+      // billingState.billingStatusPromise = null
     }
   })
 
-  return billingState.billingStatusPromise
+  // return billingState.billingStatusPromise
 }
 
 export async function subscribeToDefaultPlan(account_id: string | undefined) {

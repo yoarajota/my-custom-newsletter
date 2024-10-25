@@ -18,7 +18,6 @@ export async function GET(request: Request) {
       if (env.ENV === "development") {
         return NextResponse.redirect(`${origin}${next}/dashboard`)
       } else if (forwardedHost) { 
-        console.log(`https://${forwardedHost}${next}/dashboard`)
         return NextResponse.redirect(`https://${forwardedHost}${next}/dashboard`)
       } else {
         return NextResponse.redirect(`${origin}${next}/dashboard`)

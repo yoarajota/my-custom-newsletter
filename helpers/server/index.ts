@@ -8,8 +8,6 @@ export const getWithLocaleURL = async (path: string) => {
 
   let url = env?.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
-  console.log("url", url)
-
   url = url.startsWith("http") ? url : `https://${url}`
 
   url = url.endsWith("/") ? url : `${url}/`
@@ -25,8 +23,6 @@ export const getWithLocaleURL = async (path: string) => {
 
 export const getApiURL = (path: string) => {
   let url = env?.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-
-  console.log("url", url)
 
   url = url.startsWith("http") ? url : `https://${url}`
 

@@ -14,7 +14,7 @@ const { app_name } = config
 const NavItem = memo(
   ({
     Icon,
-    title,
+    title, 
     active,
     href,
     badge,
@@ -25,8 +25,6 @@ const NavItem = memo(
     href: string
     badge?: number
   }) => {
-    console.log(active)
-
     return (
       <Link
         href={href}
@@ -107,7 +105,7 @@ export default async function Navbar({ auth }: { auth: Auth }) {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             {navItems.map((item, index) => (
-              <NavItem key={index} {...item} active={url?.includes(item.href)} />
+              <NavItem key={index} {...item} active={url?.includes?.(item.href)} />
             ))}
           </nav>
         </div>

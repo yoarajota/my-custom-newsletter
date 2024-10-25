@@ -14,8 +14,6 @@ export async function googleSignIn() {
     },
   })
 
-  console.log("data.url", data.url)
-
   if (data.url) {
     redirect(data.url)
   }
