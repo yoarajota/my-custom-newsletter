@@ -253,6 +253,8 @@ export async function subscribeToDefaultPlan(account_id: string | undefined) {
     },
   })
 
+  console.log(error)
+
   return data.url
 }
 

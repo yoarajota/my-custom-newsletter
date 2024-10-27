@@ -1,14 +1,14 @@
-import { Bell, Home, LineChart, LucideIcon, Package, Package2, ShoppingCart, Users } from "lucide-react"
+import { Bell, LucideIcon, Package2 } from "lucide-react"
 import { headers } from "next/headers"
 import Link from "next/link"
-import { memo } from "react"
 import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { getBillingStatus, subscribeToDefaultPlan } from "app/[locale]/actions"
+import { getBillingStatus } from "app/[locale]/actions"
 import config from "app-config"
-import { Auth } from "types/auth"
+import { Auth, BillingStatus } from "types/auth"
 import UpgradeButton from "./UpgradeButton"
+import { NAV_ITEMS } from "../utils"
 const { app_name } = config
 
 const NavItem = ({
@@ -24,14 +24,14 @@ const NavItem = ({
   href: string
   badge?: number
 }) => {
+  let classes = "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+
+  if (active) {
+    classes = "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+  }
+
   return (
-    <Link
-      href={href}
-      className={
-        "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary" +
-        (active ? " text-primary" : " text-muted-foreground")
-      }
-    >
+    <Link href={href} className={classes}>
       {Icon && <Icon className="size-4" />}
       <>{title}</>
       {badge && (
@@ -44,9 +44,7 @@ const NavItem = ({
 // Definindo o displayName para o componente memoizado
 NavItem.displayName = "NavItem"
 
-export default async function Navbar({ auth }: { auth: Auth }) {
-  const billingStatus = await getBillingStatus()
-
+export default async function Navbar({ auth, billingStatus }: { auth: Auth; billingStatus: BillingStatus }) {
   const heads = headers()
 
   const url = heads.get("referer")
@@ -56,35 +54,6 @@ export default async function Navbar({ auth }: { auth: Auth }) {
   if (billingStatus) {
     subscriptionActive = billingStatus.subscription_active
   }
-
-  const navItems = [
-    {
-      Icon: Home,
-      title: "Dashboard",
-      href: "/dashboard",
-    },
-    // {
-    //   Icon: ShoppingCart,
-    //   title: "Orders",
-    //   href: "/orders",
-    //   badge: 6,
-    // },
-    // {
-    //   Icon: Package,
-    //   title: "Products",
-    //   href: "/products",
-    // },
-    // {
-    //   Icon: Users,
-    //   title: "Customers",
-    //   href: "/customers",
-    // },
-    // {
-    //   Icon: LineChart,
-    //   title: "Analytics",
-    //   href: "/analytics",
-    // },
-  ]
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
@@ -101,7 +70,7 @@ export default async function Navbar({ auth }: { auth: Auth }) {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            {navItems.map((item, index) => (
+            {NAV_ITEMS.map((item, index) => (
               <NavItem key={index} {...item} active={url?.includes?.(item.href)} />
             ))}
           </nav>
