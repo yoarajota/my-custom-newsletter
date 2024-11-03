@@ -5,14 +5,15 @@ import { useState } from "react"
 import { Button } from "@components/ui/button"
 import { Card, CardContent } from "@components/ui/card"
 import { Input } from "@components/ui/input"
+import { handleTopicToAccount } from "./actions"
 
 export default function Web() {
   const [topic, setTopic] = useState("")
 
-  const handleSubmit = (event: React.FormEvent) => {
+  function handleSubmit(event) {
     event.preventDefault()
-    console.log("Form submitted:", { topic })
-    // Here you would typically send the form data to your backend
+
+    handleTopicToAccount(topic)
   }
 
   return (
@@ -22,7 +23,7 @@ export default function Web() {
           <div className="flex flex-col lg:flex-row">
             <div className="flex-1 p-8 lg:p-12">
               <h1 className="mb-4 text-4xl font-bold tracking-tight text-primary">Vamos iniciar sua experiência!</h1>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-6">
                 <div>
                   <h2 className="mb-2 text-2xl font-semibold text-foreground">Insira um tema que você ama!</h2>
                   <p className="mb-4 text-lg text-muted-foreground">
@@ -38,10 +39,10 @@ export default function Web() {
                     />
                   </div>
                 </div>
-                <Button type="submit" size="lg" className="w-full">
+                <Button onClick={handleSubmit} size="lg" className="w-full">
                   Vamos!
                 </Button>
-              </form>
+              </div>
             </div>
             <div className="relative min-h-[300px] flex-1 lg:min-h-[500px]">
               <Image
