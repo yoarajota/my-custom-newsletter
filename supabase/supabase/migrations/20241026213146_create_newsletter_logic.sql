@@ -15,13 +15,13 @@ CREATE TABLE newsletters_topics (
 -- enable RLS on the table
 ALTER TABLE public.newsletters_topics ENABLE ROW LEVEL SECURITY;
 
--- --------------
--- Users should be able to create records that are owned by an account they belong to
--- --------------
-create policy "Account members can insert" on public.newsletters_topics
+----------------
+-- Authenticated users should be able to read all records regardless of account
+----------------
+create policy "Authenticated can select" on public.newsletters_accounts_topic_subscription
     for select
     to authenticated
-    using (true);
+    using (true);    
 
 CREATE TABLE newsletters_accounts_topic_subscription (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

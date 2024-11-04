@@ -1,11 +1,37 @@
 import { env, pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.0"
+import Groq from "https://cdn.jsdelivr.net/npm/groq-sdk@0.7.0/+esm"
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { CORS_HEADERS } from "../_shared/index.ts"
-import { createSupabaseClient } from "../_shared/supabase.ts"
+import { getUserAccount, success } from "../_shared/index.ts"
+import { createSupabaseAdminClient, createSupabaseClient } from "../_shared/supabase.ts"
+
+const groq = new Groq({ apiKey: Deno.env.get("GROQ_API_KEY") })
 
 // Preparation for Deno runtime
 env.useBrowserCache = false
 env.allowLocalModels = false
+
+const generator = async (content: string, lang: string) => {
+  const example = `{ "msg": "str"}`
+
+  const chatCompletion = await groq.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: `You are a google search engine master. You only returns in JSON with this format ${example}. You write in ${lang}.`,
+      },
+      {
+        role: "user",
+        content,
+      },
+    ],
+    model: "llama3-8b-8192",
+    temperature: 0.2,
+    max_tokens: 1024,
+    top_p: 1,
+  })
+
+  return JSON.parse(chatCompletion.choices[0].message.content).msg
+}
 
 // Deno Handler
 serve(async (req) => {
@@ -13,18 +39,7 @@ serve(async (req) => {
     // Construct pipeline outside of serve for faster warm starts
     const pipe = await pipeline("feature-extraction", "Supabase/gte-small")
 
-    console.log("a")
-
-    // Configurar pipeline de geração
-    const generator = await pipeline("text-generation", "meta-llama/Meta-Llama-3-8B", {
-      headers: { Authorization: `Bearer ${Deno.env.get("HUGGING_FACE_ACCESS_TOKEN")}` },
-    })
-
-    console.log("b")
-
-    const { topic } = await req.json()
-
-    console.log(topic)
+    const { topic, lang } = await req.json()
 
     // Generate the embedding from the user topic
     const output = await pipe(topic, {
@@ -37,46 +52,64 @@ serve(async (req) => {
 
     const supabase = createSupabaseClient(req)
 
-    console.log("asdasdasd")
+    const admin = createSupabaseAdminClient()
 
     const { data: similarContent, error } = await supabase.rpc("check_topic_similarity", {
       new_embedding: embedding,
       threshold: 0.8,
     })
 
-    console.log(similarContent)
-
     if (error) throw error
 
-    if (!similarContent.length) {
-      console.log("similarContent.length")
+    let newsletter_topic_id: string | undefined
 
-      // Gerar nome do conteúdo
-      const name = await generator(`Crie um título interessante para um artigo sobre '${topic}'`)[0]["generated_text"]
+    for (const simmilar of similarContent) {
+      if (simmilar.similarity > 0.95) {
+        newsletter_topic_id = simmilar.id
 
-      // Gerar resumo
-      const summary = await generator(`Resuma brevemente o conteúdo de um artigo sobre '${topic}'`)[0]["generated_text"]
-
-      // Gerar descrição SEO
-      const se_description = await generator(
-        `Liste palavras-chave para SEO sobre '${topic}' separadas por vírgulas`
-      )[0]["generated_text"]
-
-      const { data, error } = await supabase.from("newsletters_topics").insert({
-        name,
-        summary,
-        se_description,
-        embedding,
-      })
+        break
+      }
     }
 
-    // Return the embedding
-    return new Response({ hi: "hi" }, { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } })
+    if (!newsletter_topic_id) {
+      const [summary, se_description] = await Promise.all([
+        generator(`Create a realy small summary about '${topic}'`, lang),
+        generator(`Create a query to search about '${topic}' in google search engine.`, lang),
+      ])
+
+      const { data, error: newslettersTopicError } = await admin
+        .from("newsletters_topics")
+        .insert({
+          name: topic,
+          summary,
+          se_description,
+          embedding,
+        })
+        .select("id")
+        .single()
+
+      if (newslettersTopicError) throw newslettersTopicError
+
+      newsletter_topic_id = data.id
+    }
+
+    const account = await getUserAccount(supabase)
+
+    await admin.from("newsletters_accounts_topic_subscription").insert({
+      newsletter_topic_id,
+      account_id: account.account_id,
+    })
+
+    return success({
+      message: "Assigned",
+    })
   } catch (error) {
     console.log("-_-_-_-_-_-_-_-_-_-_-_- ERROR -_-_-_-_-_-_-_-_-_-_-_-")
     console.log(error)
 
-    return new Response({ error: "Error" }, { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } })
+    return error({
+      message: "Error",
+    })
   }
 })
 

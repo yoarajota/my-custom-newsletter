@@ -11,12 +11,6 @@ const fontSans = FontSans({
 })
 
 export default async function RootLayout({ children, params: { locale } }: Readonly<LayoutProps>) {
-  // const headersList = headers()
-  // const header_url = headersList.get("x-pathname") || ""
-
-  // const isHome = header_url === `/${locale}`
-  // const isAuthPath = header_url.includes("/auth")
-
   const messages = await getMessages()
 
   return (

@@ -182,8 +182,6 @@ export async function getPlans() {
 }
 
 export async function getBillingStatus(): Promise<BillingStatus> {
-  console.log("getBillingStatus")
-
   // if (billingState.billingStatus) {
   //   return billingState.billingStatus
   // }
@@ -207,8 +205,6 @@ export async function getBillingStatus(): Promise<BillingStatus> {
           },
         },
       })
-
-      console.log("data", data)
 
       if (error) {
         console.log(error)
