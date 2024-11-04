@@ -1,12 +1,16 @@
-import AccountDashboard from "@components/pages/dashboard/AccountDashboard"
-import AssignTopicToAccountForm from "@components/pages/dashboard/AssignTopicToAccountForm"
 import DashboardHandler from "@components/pages/dashboard/DashboardHandler"
 import { Card, CardContent } from "@components/ui/card"
-import { getAccounts, getAuth } from "app/[locale]/actions"
+import { getAccounts } from "app/[locale]/actions"
 import { NewslettersTopics } from "types/common/newsletter"
 import { queryAssignedUserTopic } from "./actions"
 
-export default async function Web({ params: { locale } }) {
+type WebProps = {
+  params: {
+    locale: string
+  }
+}
+
+export default async function Web({ params: { locale } }: WebProps) {
   const [account] = await getAccounts()
 
   const assignedTopic: NewslettersTopics | null = await queryAssignedUserTopic(account?.account_id)

@@ -1,6 +1,7 @@
 import { env, pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.0"
 import Groq from "https://cdn.jsdelivr.net/npm/groq-sdk@0.7.0/+esm"
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { Tables } from "../../db_types.ts"
 import { getUserAccount, success } from "../_shared/index.ts"
 import { createSupabaseAdminClient, createSupabaseClient } from "../_shared/supabase.ts"
 
@@ -61,17 +62,17 @@ serve(async (req) => {
 
     if (error) throw error
 
-    let newsletter_topic_id: string | undefined
+    let newsletterTopic: Tables<"newsletters_topics"> | undefined
 
     for (const simmilar of similarContent) {
       if (simmilar.similarity > 0.95) {
-        newsletter_topic_id = simmilar.id
+        newsletterTopic = simmilar
 
         break
       }
     }
 
-    if (!newsletter_topic_id) {
+    if (!newsletterTopic) {
       const [summary, se_description] = await Promise.all([
         generator(`Create a realy small summary about '${topic}'`, lang),
         generator(`Create a query to search about '${topic}' in google search engine.`, lang),
@@ -85,23 +86,24 @@ serve(async (req) => {
           se_description,
           embedding,
         })
-        .select("id")
+        .select("id, name, sumarry")
         .single()
 
       if (newslettersTopicError) throw newslettersTopicError
 
-      newsletter_topic_id = data.id
+      newsletterTopic = data
     }
 
     const account = await getUserAccount(supabase)
 
     await admin.from("newsletters_accounts_topic_subscription").insert({
-      newsletter_topic_id,
+      newsletter_topic_id: newsletterTopic?.id,
       account_id: account.account_id,
     })
 
     return success({
       message: "Assigned",
+      topic: newsletterTopic,
     })
   } catch (error) {
     console.log("-_-_-_-_-_-_-_-_-_-_-_- ERROR -_-_-_-_-_-_-_-_-_-_-_-")
