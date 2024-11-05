@@ -15,17 +15,26 @@ export default function AssignTopicToAccountForm({
   setUserAssignedTopic: Function
 }) {
   const [topic, setTopic] = useState("")
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault()
 
-    const { data } = await handleTopicToAccount(topic, locale)
+    setLoading(true)
+
+    const { data, error } = await handleTopicToAccount(topic, locale)
+
+    if (!data || error) {
+      setLoading(false)
+    }
 
     if (data?.status === "success") {
       setTopic("")
 
       setUserAssignedTopic(data.topic as NewslettersTopics)
     }
+
+    setLoading(false)
   }
 
   return (

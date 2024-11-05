@@ -1,8 +1,8 @@
 import { env, pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.0"
 import Groq from "https://cdn.jsdelivr.net/npm/groq-sdk@0.7.0/+esm"
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { Tables } from "../../db_types.ts"
-import { getUserAccount, success } from "../_shared/index.ts"
+import { Tables } from "../_shared/db_types.ts"
+import { error, getUserAccount, success } from "../_shared/index.ts"
 import { createSupabaseAdminClient, createSupabaseClient } from "../_shared/supabase.ts"
 
 const groq = new Groq({ apiKey: Deno.env.get("GROQ_API_KEY") })
@@ -57,20 +57,12 @@ serve(async (req) => {
 
     const { data: similarContent, error } = await supabase.rpc("check_topic_similarity", {
       new_embedding: embedding,
-      threshold: 0.8,
+      threshold: 0.75,
     })
 
     if (error) throw error
 
-    let newsletterTopic: Tables<"newsletters_topics"> | undefined
-
-    for (const simmilar of similarContent) {
-      if (simmilar.similarity > 0.95) {
-        newsletterTopic = simmilar
-
-        break
-      }
-    }
+    let newsletterTopic: Tables<"newsletters_topics"> | undefined = similarContent[0]
 
     if (!newsletterTopic) {
       const [summary, se_description] = await Promise.all([
@@ -86,7 +78,7 @@ serve(async (req) => {
           se_description,
           embedding,
         })
-        .select("id, name, sumarry")
+        .select("id, name, summary")
         .single()
 
       if (newslettersTopicError) throw newslettersTopicError
@@ -105,9 +97,9 @@ serve(async (req) => {
       message: "Assigned",
       topic: newsletterTopic,
     })
-  } catch (error) {
+  } catch (err) {
     console.log("-_-_-_-_-_-_-_-_-_-_-_- ERROR -_-_-_-_-_-_-_-_-_-_-_-")
-    console.log(error)
+    console.log(err)
 
     return error({
       message: "Error",

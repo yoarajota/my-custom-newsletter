@@ -27,5 +27,5 @@ export const queryAssignedUserTopic = async (account_id?: string) => {
     .eq("account_id", account_id)
     .single()
 
-  return data?.newsletter_topic_id?.[0] ?? (null as NewslettersTopics | null)
+  return (data?.newsletter_topic_id ?? null) as NewslettersTopics | null
 }
