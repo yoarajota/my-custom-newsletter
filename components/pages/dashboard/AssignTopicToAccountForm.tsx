@@ -1,5 +1,6 @@
 "use client"
 
+import { Loader2 } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { Button } from "@components/ui/button"
@@ -22,7 +23,19 @@ export default function AssignTopicToAccountForm({
 
     setLoading(true)
 
-    const { data, error } = await handleTopicToAccount(topic, locale)
+    // const { data, error } = await handleTopicToAccount(topic, locale)
+
+    await new Promise(async (res) => {
+      await setTimeout(() => {
+        res(true)
+      }, 4000)
+    })
+
+    const data = {
+      status: "success",
+    }
+
+    const error = null
 
     if (!data || error) {
       setLoading(false)
@@ -57,7 +70,8 @@ export default function AssignTopicToAccountForm({
               />
             </div>
           </div>
-          <Button onClick={handleSubmit} size="lg" className="w-full">
+          <Button onClick={handleSubmit} size="lg" className="w-full" disabled={loading || topic.length === 0}>
+            {loading && <Loader2 className="animate-once animate-fade-right animate-spin" />}
             Vamos!
           </Button>
         </div>

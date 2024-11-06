@@ -3,5 +3,8 @@ import "styles/tailwind.css"
 import "./globals.css"
 
 export default function RootLayout({ children }: Readonly<LayoutProps>) {
-  return <>{children}</>
+  return <>
+  {children}
+  <Toaster />
+  </>
 }

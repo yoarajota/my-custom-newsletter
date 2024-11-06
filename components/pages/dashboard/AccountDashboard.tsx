@@ -1,5 +1,5 @@
 "use client"
 
 export default function AccountDashboard() {
-  return <>tchem topico uai</>
+  return <div className="animate-fade">tchem topico uai</div>
 }
