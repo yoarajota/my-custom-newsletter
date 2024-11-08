@@ -16,6 +16,6 @@ export default function DashboardHandler({ locale, assignedTopic }: DashboardHan
   return !userAssignedTopic ? (
     <AssignTopicToAccountForm locale={locale} setUserAssignedTopic={setUserAssignedTopic} />
   ) : (
-    <AccountDashboard />
+    <AccountDashboard topic={userAssignedTopic} />
   )
 }

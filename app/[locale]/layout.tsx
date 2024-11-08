@@ -1,7 +1,7 @@
 import { Inter as FontSans } from "next/font/google"
-import { headers } from "next/headers"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
+import { Toaster } from "@components/ui/sonner"
 import { cn } from "@lib/utils"
 import type { LayoutProps } from "types/common"
 
@@ -17,6 +17,8 @@ export default async function RootLayout({ children, params: { locale } }: Reado
     <html lang={locale} suppressHydrationWarning>
       <body className={cn("flex min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+
+        <Toaster />
       </body>
     </html>
   )

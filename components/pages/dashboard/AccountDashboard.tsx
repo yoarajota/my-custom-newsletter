@@ -1,5 +1,11 @@
 "use client"
 
-export default function AccountDashboard() {
-  return <div className="animate-fade">tchem topico uai</div>
+import { type NewslettersTopics } from "types/common/newsletter"
+
+type AccountDashboardType = {
+  topic: NewslettersTopics
+}
+
+export default function AccountDashboard({ topic }: AccountDashboardType) {
+  return <div className="">{JSON.stringify(topic)}</div>
 }

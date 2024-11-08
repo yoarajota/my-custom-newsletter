@@ -1,54 +1,15 @@
-import { Bell, LucideIcon, Package2 } from "lucide-react"
-import { headers } from "next/headers"
+import { Bell, Package2 } from "lucide-react"
 import Link from "next/link"
-import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { getBillingStatus } from "app/[locale]/actions"
 import config from "app-config"
 import { Auth, BillingStatus } from "types/auth"
+import NavItem from "./NavItem"
 import UpgradeButton from "./UpgradeButton"
 import { NAV_ITEMS } from "../utils"
 const { app_name } = config
 
-const NavItem = ({
-  Icon,
-  title,
-  active,
-  href,
-  badge,
-}: {
-  Icon: LucideIcon
-  title: string
-  active?: boolean
-  href: string
-  badge?: number
-}) => {
-  let classes = "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-
-  if (active) {
-    classes = "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-  }
-
-  return (
-    <Link href={href} className={classes}>
-      {Icon && <Icon className="size-4" />}
-      <>{title}</>
-      {badge && (
-        <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">{badge}</Badge>
-      )}
-    </Link>
-  )
-}
-
-// Definindo o displayName para o componente memoizado
-NavItem.displayName = "NavItem"
-
 export default async function Navbar({ auth, billingStatus }: { auth: Auth; billingStatus: BillingStatus }) {
-  const heads = headers()
-
-  const url = heads.get("referer")
-
   let subscriptionActive: boolean = false
 
   if (billingStatus) {
@@ -71,7 +32,7 @@ export default async function Navbar({ auth, billingStatus }: { auth: Auth; bill
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             {NAV_ITEMS.map((item, index) => (
-              <NavItem key={index} {...item} active={url?.includes?.(item.href)} />
+              <NavItem key={index} {...item} />
             ))}
           </nav>
         </div>

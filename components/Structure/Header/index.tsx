@@ -1,53 +1,17 @@
-import { Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
-import { headers } from "next/headers"
+import { Menu, Package2, Search } from "lucide-react"
 import Link from "next/link"
-import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { Input } from "@components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet"
 import config from "app-config"
 import { Auth, BillingStatus } from "types/auth"
+import NavItem from "./NavItem"
 import UserMenu from "./UserMenu"
 import { NAV_ITEMS } from "../utils"
 const { app_name } = config
 
-const NavItem = ({
-  Icon,
-  title,
-  active,
-  href,
-  badge,
-}: {
-  Icon: React.ElementType
-  title: string
-  active?: boolean
-  href: string
-  badge?: number
-}) => {
-  let classes = "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-
-  if (active) {
-    classes =
-      "mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-  }
-
-  return (
-    <Link href="#" className={classes}>
-      <Icon className="size-5" />
-      {title}
-      {badge && (
-        <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">{badge}</Badge>
-      )}
-    </Link>
-  )
-}
-
 export default async function Header({ auth, billingStatus }: { auth: Auth; billingStatus: BillingStatus }) {
-  const heads = headers()
-
-  const url = heads.get("referer")
-
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -64,7 +28,7 @@ export default async function Header({ auth, billingStatus }: { auth: Auth; bill
               <span className="sr-only">{app_name}</span>
             </Link>
             {NAV_ITEMS.map((item, index) => (
-              <NavItem key={index} {...item} active={url?.includes?.(item.href)} />
+              <NavItem key={index} {...item} />
             ))}
           </nav>
           <div className="mt-auto">

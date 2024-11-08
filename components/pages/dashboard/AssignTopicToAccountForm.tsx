@@ -23,19 +23,7 @@ export default function AssignTopicToAccountForm({
 
     setLoading(true)
 
-    // const { data, error } = await handleTopicToAccount(topic, locale)
-
-    await new Promise(async (res) => {
-      await setTimeout(() => {
-        res(true)
-      }, 4000)
-    })
-
-    const data = {
-      status: "success",
-    }
-
-    const error = null
+    const { data, error } = await handleTopicToAccount(topic, locale)
 
     if (!data || error) {
       setLoading(false)
@@ -71,7 +59,7 @@ export default function AssignTopicToAccountForm({
             </div>
           </div>
           <Button onClick={handleSubmit} size="lg" className="w-full" disabled={loading || topic.length === 0}>
-            {loading && <Loader2 className="animate-once animate-fade-right animate-spin" />}
+            {loading && <Loader2 className="mr-2 animate-spin" />}
             Vamos!
           </Button>
         </div>
