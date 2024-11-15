@@ -1,15 +1,22 @@
-FROM node:alpine
+FROM node:22.11.0-slim
 
-RUN mkdir -p /usr/src/node-app && chown -R node:node /usr/src/node-app
+# Create app directory
+WORKDIR /usr/src/app
 
-WORKDIR /usr/src/node-app
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-COPY package.json yarn.lock ./
+# Install app dependencies
+RUN npm ci
 
-USER node
+# Bundle app source
+COPY . .
 
-RUN yarn install --pure-lockfile
+# Build the TypeScript files
+RUN npm run build
 
-COPY --chown=node:node . .
+# Expose port 8080
+EXPOSE 8080
 
-EXPOSE 3000
+# Start the app
+CMD npm run start
