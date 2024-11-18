@@ -6,12 +6,19 @@ import { NewslettersTopics } from "types/common/newsletter"
 export const handleTopicToAccount = async (topic: string, lang: string) => {
   const supabase = createClient()
 
-  return await supabase.functions.invoke("handle_topic", {
+  const { data, error: err } = await supabase.functions.invoke("handle-topic", {
     body: {
       topic,
       lang,
     },
   })
+
+  let error = null
+  if (err) {
+    error = err.message
+  }
+
+  return { data, error }
 }
 
 export const queryAssignedUserTopic = async (account_id?: string) => {

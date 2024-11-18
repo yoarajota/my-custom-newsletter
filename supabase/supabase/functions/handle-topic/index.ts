@@ -7,6 +7,8 @@ import { createSupabaseAdminClient, createSupabaseClient } from "../_shared/supa
 
 const groq = new Groq({ apiKey: Deno.env.get("GROQ_API_KEY") })
 
+const SE_EXAMPLE = "(“” OR “”)"
+
 // Preparation for Deno runtime
 env.useBrowserCache = false
 env.allowLocalModels = false
@@ -67,7 +69,11 @@ serve(async (req) => {
     if (!newsletterTopic) {
       const [summary, se_description] = await Promise.all([
         generator(`Create a realy small summary about '${topic}'`, lang),
-        generator(`Create a query to search about '${topic}' in google search engine.`, lang),
+        generator(
+          `Create a query to search about '${topic}' in google search engine. The attribute should respect this structure: ${SE_EXAMPLE}.` +
+            (lang !== "en-US" && "The query must search attributes in english too."),
+          lang
+        ),
       ])
 
       const { data, error: newslettersTopicError } = await admin
@@ -112,7 +118,7 @@ serve(async (req) => {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-  curl -i --location --request POST 'http://127.0.0.1:64321/functions/v1/handle_topic' \
+  curl -i --location --request POST 'http://127.0.0.1:64321/functions/v1/handle-topic' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
     --header 'Content-Type: application/json' \
     --data '{"name":"Functions"}'
