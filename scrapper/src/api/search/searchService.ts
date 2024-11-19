@@ -37,9 +37,27 @@ export class SearchService {
       // Navigate the page to a URL.
       await page.goto(`https://www.google.com/search?q=${se_description}&tbm=nws`)
 
-      // if (!searchResults || searchResults.length === 0) {
-      //   return ServiceResponse.failure("No search results found", null, StatusCodes.NOT_FOUND)
-      // }
+      // await #search
+      await page.waitForSelector("#search")
+
+      const searchResult = await page.waitForFunction(() => {
+        const links = Array.from(document.querySelectorAll("#search a"))
+
+        return links.map((link) => link.getAttribute("href"))
+      })
+
+      // Para acessar os resultados
+      const urls = await searchResult.jsonValue()
+
+      const pages = []
+      for (const url of urls) {
+        if (url) {
+          browser.newPage().then(async (newPage) => {
+            await newPage.goto(url)
+            pages.push(newPage)
+          })
+        }
+      }
 
       return ServiceResponse.success<string>("Search results found", "searchResults")
     } catch (ex) {
