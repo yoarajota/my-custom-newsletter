@@ -5,9 +5,9 @@ import { handleServiceResponse } from "@/common/utils/httpHandlers"
 
 class SearchController {
   public searchTopicContents: RequestHandler = async (req: Request, res: Response) => {
-    const { name, se_description } = req.body
+    const { newsletter_topic_id } = req.body
 
-    const serviceResponse = await searchService.searchTopic(name, se_description)
+    const serviceResponse = await searchService.searchTopic(newsletter_topic_id)
     return handleServiceResponse(serviceResponse, res)
   }
 }

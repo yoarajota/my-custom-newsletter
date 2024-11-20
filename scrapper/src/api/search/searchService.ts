@@ -1,61 +1,51 @@
 import { StatusCodes } from "http-status-codes"
-
 import puppeteer from "puppeteer"
 import { z } from "zod"
 import { ServiceResponse } from "@/common/models/serviceResponse"
 import { commonValidations } from "@/common/utils/commonValidation"
+import getDrizzleDb from "@/db"
 import { logger } from "@/server"
-
 export class SearchService {
-  // Retrieves all users from the database
-  // async findAll(): Promise<ServiceResponse<Search[] | null>> {
-  //   try {
-  //     const users = await this.userRepository.findAllAsync()
-  //     if (!users || users.length === 0) {
-  //       return ServiceResponse.failure("No Users found", null, StatusCodes.NOT_FOUND)
-  //     }
-  //     return ServiceResponse.success<Search[]>("Users found", users)
-  //   } catch (ex) {
-  //     const errorMessage = `Error finding all users: $${(ex as Error).message}`
-  //     logger.error(errorMessage)
-  //     return ServiceResponse.failure(
-  //       "An error occurred while retrieving users.",
-  //       null,
-  //       StatusCodes.INTERNAL_SERVER_ERROR
-  //     )
-  //   }
-  // }
+  async searchTopic(newsletter_topic_id: string): Promise<ServiceResponse<string | null>> {
+    const db = getDrizzleDb()
 
-  // Initialize the puppeteer service to scrape the web (google)
-  async searchTopic(name: string, se_description: string): Promise<ServiceResponse<string | null>> {
     try {
-      const browser = await puppeteer.launch({
-        headless: false,
-      })
-      const page = await browser.newPage()
-
-      // Navigate the page to a URL.
-      await page.goto(`https://www.google.com/search?q=${se_description}&tbm=nws`)
-
-      // await #search
-      await page.waitForSelector("#search")
-
-      const searchResult = await page.waitForFunction(() => {
-        const links = Array.from(document.querySelectorAll("#search a"))
-
-        return links.map((link) => link.getAttribute("href"))
+      const newsLetterTopicRegister = await db.query.newslettersTopics.findFirst({
+        where: (posts, { eq }) => eq(posts.id, newsletter_topic_id),
       })
 
-      // Para acessar os resultados
-      const urls = await searchResult.jsonValue()
+      if (newsLetterTopicRegister) {
+        const { se_description, name, summary } = newsLetterTopicRegister
 
-      const pages = []
-      for (const url of urls) {
-        if (url) {
-          browser.newPage().then(async (newPage) => {
-            await newPage.goto(url)
-            pages.push(newPage)
-          })
+        const browser = await puppeteer.launch({
+          headless: false,
+        })
+
+        const page = await browser.newPage()
+
+        // Navigate the page to a URL.
+        await page.goto(`https://www.google.com/search?q=${se_description}&tbm=nws`)
+
+        // await #search
+        await page.waitForSelector("#search")
+
+        const searchResult = await page.waitForFunction(() => {
+          const links = Array.from(document.querySelectorAll("#search a"))
+
+          return links.map((link) => link.getAttribute("href"))
+        })
+
+        // For now, get first 10 results
+        const urls = (await searchResult.jsonValue()).slice(0, 10)
+
+        const pages = []
+        for (const url of urls) {
+          if (url) {
+            browser.newPage().then(async (newPage) => {
+              await newPage.goto(url)
+              pages.push(newPage)
+            })
+          }
         }
       }
 
@@ -74,8 +64,7 @@ export class SearchService {
 
 export const SearchTopicContentSchema = z.object({
   body: z.object({
-    name: commonValidations.string,
-    se_description: commonValidations.string,
+    newsletter_topic_id: commonValidations.string,
   }),
 })
 
