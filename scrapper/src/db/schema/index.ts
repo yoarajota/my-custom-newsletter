@@ -13,3 +13,15 @@ export const newslettersTopics = pgTable("newsletters_topics", {
   se_description: text("se_description").notNull(),
   embedding: vector("embedding", { dimensions: 384 }).notNull(),
 })
+
+export const newslettersTopicsContent = pgTable("newsletters_topics_content", {
+  id: uuid("id")
+    .default(sql`gen_random_uuid()`)
+    .primaryKey(),
+  created_at: timestamp("created_at", { withTimezone: true })
+    .default(sql`timezone('utc'::text, now())`)
+    .notNull(),
+  newsletter_topic_id: uuid("newsletter_topic_id").notNull(),
+  url: text("url").notNull(),
+  content: text("content").notNull(),
+})

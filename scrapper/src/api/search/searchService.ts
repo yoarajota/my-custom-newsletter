@@ -1,9 +1,10 @@
 import { StatusCodes } from "http-status-codes"
-import puppeteer from "puppeteer"
+import puppeteer, { Page } from "puppeteer"
 import { z } from "zod"
 import { ServiceResponse } from "@/common/models/serviceResponse"
 import { commonValidations } from "@/common/utils/commonValidation"
 import getDrizzleDb from "@/db"
+import { newslettersTopicsContent } from "@/db/schema"
 import { logger } from "@/server"
 export class SearchService {
   async searchTopic(newsletter_topic_id: string): Promise<ServiceResponse<string | null>> {
@@ -36,16 +37,67 @@ export class SearchService {
         })
 
         // For now, get first 10 results
-        const urls = (await searchResult.jsonValue()).slice(0, 10)
+        // const urls = (await searchResult.jsonValue()).slice(0, 10)
+        const urls = (await searchResult.jsonValue()).slice(0, 2)
 
-        const pages = []
+        const pages: { url: string; page: Page }[] = []
+        const promisesPages = []
         for (const url of urls) {
           if (url) {
-            browser.newPage().then(async (newPage) => {
-              await newPage.goto(url)
-              pages.push(newPage)
+            promisesPages.push(
+              browser.newPage().then(async (newPage) => {
+                await newPage.goto("https://www.smry.ai/" + url)
+                pages.push({
+                  page: newPage,
+                  url,
+                })
+              })
+            )
+          }
+        }
+
+        await Promise.all(promisesPages)
+
+        const toStore: {
+          url: string
+          content: string
+        }[] = []
+        for (const { page, url } of pages) {
+          // browser focus in the page
+          await page.bringToFront()
+
+          // get the page content
+          // data-state="active"
+          // data-orientation="horizontal"
+          // get what is inside the div with data-state="active" and data-orientation="horizontal"
+
+          await page.waitForSelector('div[data-state="active"][data-orientation="horizontal"]')
+
+          const content = await page.evaluate(() => {
+            const activeDiv = document.querySelector('div[data-state="active"][data-orientation="horizontal"]')
+
+            return activeDiv?.textContent
+          })
+
+          if (content) {
+            toStore.push({
+              url,
+              content,
             })
           }
+        }
+
+        if (toStore.length > 0) {
+          await db
+            .insert(newslettersTopicsContent)
+            .values(
+              toStore.map((content) => ({
+                newsletter_topic_id,
+                url: content.url,
+                content: content.content,
+              }))
+            )
+            .onConflictDoNothing()
         }
       }
 

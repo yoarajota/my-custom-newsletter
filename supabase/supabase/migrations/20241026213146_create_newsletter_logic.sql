@@ -35,7 +35,7 @@ CREATE TABLE newsletters_accounts_topic_subscription (
 ALTER TABLE public.newsletters_accounts_topic_subscription ENABLE ROW LEVEL SECURITY;
 
 -- --------------
--- Users should be able to create records that are owned by an account they belong to
+-- Postgres should be able to create records that are owned by an account they belong to
 -- --------------
 create policy "Postgres can insert" on public.newsletters_accounts_topic_subscription
     for insert
