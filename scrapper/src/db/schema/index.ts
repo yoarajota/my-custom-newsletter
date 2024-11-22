@@ -14,7 +14,7 @@ export const newslettersTopics = pgTable("newsletters_topics", {
   embedding: vector("embedding", { dimensions: 384 }).notNull(),
 })
 
-export const newslettersTopicsContent = pgTable("newsletters_topics_content", {
+export const newslettersTopicFilesContents = pgTable("newsletters_topic_files_contents", {
   id: uuid("id")
     .default(sql`gen_random_uuid()`)
     .primaryKey(),
