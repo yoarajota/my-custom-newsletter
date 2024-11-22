@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes"
 import puppeteer, { Page } from "puppeteer"
 import { z } from "zod"
+import { supabase } from "./../../../../@lib/supabase/client"
 import { ServiceResponse } from "@/common/models/serviceResponse"
 import { commonValidations } from "@/common/utils/commonValidation"
 import { handlePgBoss } from "@/common/utils/pgBoss"
@@ -103,10 +104,19 @@ export class SearchService {
 
               await db.insert(newslettersTopicFilesContents).values(contents).onConflictDoNothing()
 
+              const date = new Date().toUTCString()
+
               handlePgBoss({
-                queue: "search-topic",
-                jobData: { newsletter_topic_id },
-                callback: async ([job]) => {},
+                queue: "generate-email",
+                jobData: { newsletter_topic_id, date },
+                callback: async ([job]) => {
+                  await supabase.functions.invoke("generate-topic-email", {
+                    body: {
+                      newsletter_topic_id: job.data.newsletter_topic_id,
+                      date: job.data.date,
+                    },
+                  })
+                },
               })
             }
 
