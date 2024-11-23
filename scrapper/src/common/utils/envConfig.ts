@@ -10,6 +10,9 @@ export const env = cleanEnv(process.env, {
   CORS_ORIGIN: str({ devDefault: testOnly("http://localhost:3000") }),
   COMMON_RATE_LIMIT_MAX_REQUESTS: num({ devDefault: testOnly(1000) }),
   COMMON_RATE_LIMIT_WINDOW_MS: num({ devDefault: testOnly(1000) }),
-  DATABASE_URL: str(),
   MICRO_SERVICE_TOKEN: str(),
+  DATABASE_URL: str(),
+  SUPABASE_URL: str(),
+  SUPABASE_ANON_KEY: str(),
+  SUPABASE_SERVICE_ROLE_KEY: str(),
 })

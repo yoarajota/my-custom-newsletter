@@ -1,10 +1,10 @@
 import { StatusCodes } from "http-status-codes"
 import puppeteer, { Page } from "puppeteer"
 import { z } from "zod"
-import { supabase } from "./../../../../@lib/supabase/client"
 import { ServiceResponse } from "@/common/models/serviceResponse"
 import { commonValidations } from "@/common/utils/commonValidation"
 import { handlePgBoss } from "@/common/utils/pgBoss"
+import { createAdminClient } from "@/common/utils/supabase/server"
 import getDrizzleDb from "@/db"
 import { newslettersTopicFilesContents } from "@/db/schema"
 import { logger } from "@/server"
@@ -26,9 +26,7 @@ export class SearchService {
           if (newsLetterTopicRegister) {
             const { se_description, name, summary } = newsLetterTopicRegister
 
-            const browser = await puppeteer.launch({
-              headless: false,
-            })
+            const browser = await puppeteer.launch()
 
             const page = await browser.newPage()
 
@@ -96,26 +94,31 @@ export class SearchService {
             }
 
             if (toStore.length > 0) {
+              const date = new Date()
+
               const contents = toStore.map((content) => ({
                 newsletter_topic_id,
                 url: content.url,
                 content: content.content,
+                created_at: date,
               }))
 
               await db.insert(newslettersTopicFilesContents).values(contents).onConflictDoNothing()
 
-              const date = new Date().toUTCString()
-
               handlePgBoss({
                 queue: "generate-email",
-                jobData: { newsletter_topic_id, date },
+                jobData: { newsletter_topic_id, date: date.toUTCString() },
                 callback: async ([job]) => {
-                  await supabase.functions.invoke("generate-topic-email", {
+                  const supabase = createAdminClient()
+
+                  const { error } = await supabase.functions.invoke("generate-topic-email", {
                     body: {
                       newsletter_topic_id: job.data.newsletter_topic_id,
                       date: job.data.date,
                     },
                   })
+
+                  console.log(error)
                 },
               })
             }
