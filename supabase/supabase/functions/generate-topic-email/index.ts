@@ -121,11 +121,24 @@ serve(async (req) => {
 
     const admin = createSupabaseAdminClient()
 
-    const { data: contents, error } = await admin
-      .from("newsletters_topic_files_contents")
-      .select("content, url")
-      .eq("newsletter_topic_id", newsletter_topic_id)
-      .eq("created_at", date)
+    const [topicResult, contentsResult] = await Promise.all([
+      admin.from("newsletters_topics").select("name").eq("id", newsletter_topic_id),
+      admin
+        .from("newsletters_topic_files_contents")
+        .select("content, url")
+        .eq("newsletter_topic_id", newsletter_topic_id)
+        .eq("created_at", date),
+    ])
+
+    const {
+      data: [{ name }],
+    } = topicResult
+
+    const { data: contents, error } = contentsResult
+
+    if (error) {
+      throw new Error(`Error fetching contents: ${error.message}`)
+    }
 
     if (contents.length) {
       const mdEmailText = await generator(JSON.stringify(contents.map(({ content }) => content)))
@@ -145,7 +158,12 @@ serve(async (req) => {
                   name: "João",
                 },
               ],
-              subject: "Hello, World!",
+              subject: `Novidades de ${name}! 🚀 - Dia ${new Date().toLocaleString("pt-BR", {
+                timeZone: "America/Sao_Paulo",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}`,
             },
           ],
           content: [
