@@ -43,29 +43,25 @@ create policy "Postgres can insert" on public.newsletters_accounts_topic_subscri
     with check (true);
 
 ----------------
--- Users should be able to delete records that are owned by an account they belong to
+-- Postgres should be able to delete records that are owned by an account they belong to
 ----------------
-create policy "Account members can delete" on public.newsletters_accounts_topic_subscription
+create policy "Postgres can delete" on public.newsletters_accounts_topic_subscription
     for delete
-    to authenticated
-    using (
-    (account_id IN ( SELECT basejump.get_accounts_with_role()))
-    );
+    to postgres
+    using (true);
 
 ---------------
--- Users should be able to update records that are owned by an account they belong to
+-- Postgres should be able to update records that are owned by an account they belong to
 ---------------
-create policy "Account members can update" on public.newsletters_accounts_topic_subscription
+create policy "Postgres can update" on public.newsletters_accounts_topic_subscription
     for update
-    to authenticated
-    using (
-    (account_id IN ( SELECT basejump.get_accounts_with_role()))
-    );
+    to postgres
+    using (true);
 
 ----------------
 -- Authenticated users should be able to read all records regardless of account
 ----------------
-create policy "Account members can select" on public.newsletters_accounts_topic_subscription
+create policy "Authenticated can select" on public.newsletters_accounts_topic_subscription
     for select
     to authenticated
     using (true);

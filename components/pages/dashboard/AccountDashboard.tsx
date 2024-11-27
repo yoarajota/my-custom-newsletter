@@ -1,5 +1,5 @@
-"use client"
-
+import Link from "next/link"
+import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { type NewslettersTopics } from "types/common/newsletter"
 
@@ -9,13 +9,17 @@ type AccountDashboardType = {
 
 export default function AccountDashboard({ topic }: AccountDashboardType) {
   return (
-    <Card>
+    <Card className="max-w-[600px]">
       <CardHeader>
-        <CardTitle>Você tá inscrito na newsletter de;</CardTitle>
+        <CardDescription>Você tá inscrito na newsletter de;</CardDescription>
+        <CardTitle>{topic.name}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <h2 className="mb-4 text-center text-3xl font-bold tracking-tighter sm:text-5xl">{topic.name}</h2>
+      <CardContent className="flex flex-col items-center space-y-6">
         <p className="text-lg text-muted-foreground">{topic.summary}</p>
+
+        <Button className="mx-auto">
+          <Link href="/newsletters/topics">Visite os posts existentes dessa newsletter</Link>
+        </Button>
       </CardContent>
     </Card>
   )

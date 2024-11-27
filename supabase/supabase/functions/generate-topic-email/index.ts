@@ -143,6 +143,18 @@ serve(async (req) => {
     if (contents.length) {
       const mdEmailText = await generator(JSON.stringify(contents.map(({ content }) => content)))
 
+      const emailHtml = mountMail(
+        mdEmailText,
+        contents.map(({ url }) => url)
+      )
+
+      const emailSubject = `Novidades de ${name}! 🚀 - Dia ${new Date().toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`
+
       const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
         method: "POST",
         headers: {
@@ -158,21 +170,13 @@ serve(async (req) => {
                   name: "João",
                 },
               ],
-              subject: `Novidades de ${name}! 🚀 - Dia ${new Date().toLocaleString("pt-BR", {
-                timeZone: "America/Sao_Paulo",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}`,
+              subject: emailSubject,
             },
           ],
           content: [
             {
               type: "text/html",
-              value: mountMail(
-                mdEmailText,
-                contents.map(({ url }) => url)
-              ),
+              value: emailHtml,
             },
           ],
           from: {
@@ -183,7 +187,10 @@ serve(async (req) => {
       })
 
       if (response.ok) {
-        console.log("Email enviado com sucesso!")
+        await admin.from("newsletters_topics_emails").insert({
+          html: emailHtml,
+          newsletter_topic_id,
+        })
       } else {
         const error = await response.text()
         console.error("Erro ao enviar email:", response.status, error)

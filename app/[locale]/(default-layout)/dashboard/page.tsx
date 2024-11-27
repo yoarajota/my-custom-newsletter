@@ -16,7 +16,7 @@ export default async function Web({ params: { locale } }: WebProps) {
   const assignedTopic: NewslettersTopics | null = await queryAssignedUserTopic(account?.account_id)
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="mx-auto px-4 py-12">
       <Card className="overflow-hidden">
         <CardContent className="p-0">
           <DashboardHandler assignedTopic={assignedTopic} locale={locale} />

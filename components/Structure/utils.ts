@@ -6,4 +6,9 @@ export const NAV_ITEMS = [
     title: "Dashboard",
     href: "/dashboard",
   },
+  {
+    icon: "Scroll",
+    title: "Topics",
+    href: "/topics",
+  },
 ]
