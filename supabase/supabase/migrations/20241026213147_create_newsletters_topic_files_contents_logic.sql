@@ -1,3 +1,26 @@
+-- Function to test if a user is subscribed to a newsletter topic
+CREATE OR REPLACE FUNCTION public.is_subscribed_to_newsletter_topic(user_id UUID, newsletter_topic_id UUID)
+  RETURNS BOOLEAN AS
+$func$
+DECLARE
+  subscribed BOOLEAN;
+BEGIN
+    SELECT
+        EXISTS(
+        SELECT 1
+        FROM
+            public.newsletters_topics_emails
+        WHERE
+            newsletter_topic_id = newsletter_topic_id
+            AND account_id = (
+                select account_id from basejump.accounts where primary_owner_user_id = user_id
+            )
+        )
+    INTO subscribed;
+    RETURN subscribed;
+END
+$func$ LANGUAGE plpgsql;
+
 -- topics table for newsletters
 
 CREATE TABLE newsletters_topic_files_contents (
@@ -32,7 +55,7 @@ CREATE TABLE newsletters_topics_emails (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   html text NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  newsletter_topic_id UUID NOT NULL references newsletters_topics(id) on delete cascade on update no action,
+  newsletter_topic_id UUID NOT NULL references newsletters_topics(id) on delete cascade on update no action
 );
 
 -- enable RLS on the table
@@ -65,7 +88,29 @@ create policy "Postgres can update" on public.newsletters_topics_emails
 ----------------
 -- Authenticated users should be able to read all records regardless of account
 ----------------
-create policy "Authenticated can select" on public.newsletters_accounts_topic_subscription
+create policy "Authenticated can select" on public.newsletters_topics_emails
     for select
     to authenticated
-    using (true);    
+    using (is_subscribed_to_newsletter_topic(auth.uid(), newsletter_topic_id));
+
+-- get all emails subscribed to a newsletter topic
+CREATE OR REPLACE FUNCTION public.get_newsletter_topic_emails(newsletter_topic_id UUID)
+    RETURNS TABLE(email character varying, name character varying) AS
+$func$
+BEGIN
+    RETURN QUERY
+    SELECT DISTINCT
+        u.email,
+        accounts.name
+    FROM 
+        public.newsletters_accounts_topic_subscription nte
+    JOIN 
+        basejump.accounts ba 
+        ON nte.account_id = ba.id
+    JOIN 
+        auth.users u
+        ON ba.primary_owner_user_id = u.id
+    WHERE 
+        nte.newsletter_topic_id = get_newsletter_topic_emails.newsletter_topic_id;
+END
+$func$ LANGUAGE plpgsql;

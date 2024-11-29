@@ -1,3 +1,4 @@
+import { Response } from "express"
 import Groq from "https://cdn.jsdelivr.net/npm/groq-sdk@0.7.0/+esm"
 import { marked } from "https://cdn.jsdelivr.net/npm/marked@15.0.2/+esm"
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
@@ -111,6 +112,43 @@ function mountMail(content: string, urls: string[]) {
   return BASE.replace("{CONTENT}", replacedContent).replace("{CREDITS}", mountCredits(urls))
 }
 
+async function sendEmails(
+  emailsSubscribed: { email: string; name: string }[],
+  emailSubject: string,
+  emailHtml: string
+) {
+  const personalizations = emailsSubscribed.map(({ email, name }) => ({
+    to: [
+      {
+        email,
+        name,
+      },
+    ],
+    subject: emailSubject,
+  }))
+
+  return await fetch("https://api.sendgrid.com/v3/mail/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      personalizations,
+      content: [
+        {
+          type: "text/html",
+          value: emailHtml,
+        },
+      ],
+      from: {
+        email: "joaovbscontato@gmail.com",
+        name: "João",
+      },
+    }),
+  })
+}
+
 serve(async (req) => {
   try {
     const { newsletter_topic_id, date } = await req.json()
@@ -155,36 +193,11 @@ serve(async (req) => {
         year: "numeric",
       })}`
 
-      const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${Deno.env.get("SENDGRID_API_KEY")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          personalizations: [
-            {
-              to: [
-                {
-                  email: "joaovbscontato@gmail.com",
-                  name: "João",
-                },
-              ],
-              subject: emailSubject,
-            },
-          ],
-          content: [
-            {
-              type: "text/html",
-              value: emailHtml,
-            },
-          ],
-          from: {
-            email: "joaovbscontato@gmail.com",
-            name: "João",
-          },
-        }),
+      const emailsSubscribed = await admin.rpc("get_emails_subscribed", {
+        newsletter_topic_id,
       })
+
+      const response = await sendEmails(emailsSubscribed, emailSubject, emailHtml)
 
       if (response.ok) {
         await admin.from("newsletters_topics_emails").insert({

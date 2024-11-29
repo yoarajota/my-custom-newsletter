@@ -30,7 +30,7 @@ export const queryAssignedUserTopic = async (account_id?: string) => {
 
   const { data } = await supabase
     .from("newsletters_accounts_topic_subscription")
-    .select("newsletter_topic_id(name, summary)")
+    .select("newsletter_topic_id(name, summary, id)")
     .eq("account_id", account_id)
     .single()
 

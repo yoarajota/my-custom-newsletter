@@ -14,8 +14,6 @@ export default async function Web({ params: { locale } }: WebProps) {
   const [account] = await getAccounts()
   const topics = await getUserTopics(account?.account_id)
 
-  console.log(topics)
-
   return (
     <div className="flex h-full flex-1 flex-col gap-4 p-4">
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">

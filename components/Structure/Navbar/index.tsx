@@ -2,6 +2,7 @@ import { Bell, Package2 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
+import { getInitials } from "@lib/utils"
 import config from "app-config"
 import { Auth, BillingStatus } from "types/auth"
 import NavItem from "./NavItem"
@@ -22,7 +23,7 @@ export default async function Navbar({ auth, billingStatus }: { auth: Auth; bill
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <Package2 className="size-6" />
-            <span className="">{app_name}</span>
+            <span>{getInitials(app_name)}</span>
           </Link>
           <Button variant="outline" size="icon" className="ml-auto size-8">
             <Bell className="size-4" />

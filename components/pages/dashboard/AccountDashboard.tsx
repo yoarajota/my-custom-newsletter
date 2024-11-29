@@ -18,7 +18,7 @@ export default function AccountDashboard({ topic }: AccountDashboardType) {
         <p className="text-lg text-muted-foreground">{topic.summary}</p>
 
         <Button className="mx-auto">
-          <Link href="/newsletters/topics">Visite os posts existentes dessa newsletter</Link>
+          <Link href={`/topics/${topic.id}`}>Visite os posts existentes dessa newsletter</Link>
         </Button>
       </CardContent>
     </Card>

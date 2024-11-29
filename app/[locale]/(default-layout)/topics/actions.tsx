@@ -17,3 +17,15 @@ export const getUserTopics = async (account_id?: string) => {
 
   return data?.map((item) => item.newsletters_topics) as unknown as NewslettersTopics[]
 }
+
+export const getAllEmailsFromTopic = async (topic_id: string) => {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from("newsletters_topics_emails")
+    .select()
+    .eq("newsletter_topic_id", topic_id)
+    .order("created_at", { ascending: false })
+
+  return data
+}
