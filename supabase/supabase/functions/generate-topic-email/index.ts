@@ -117,6 +117,8 @@ async function sendEmails(
   emailSubject: string,
   emailHtml: string
 ) {
+  console.log(emailsSubscribed)
+
   const personalizations = emailsSubscribed.map(({ email, name }) => ({
     to: [
       {

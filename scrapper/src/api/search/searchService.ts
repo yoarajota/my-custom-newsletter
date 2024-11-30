@@ -27,9 +27,7 @@ export class SearchService {
             if (newsLetterTopicRegister) {
               const { se_description, name, summary } = newsLetterTopicRegister
 
-              const browser = await puppeteer.launch({
-                headless: false,
-              })
+              const browser = await puppeteer.launch()
 
               const page = await browser.newPage()
 
@@ -47,7 +45,7 @@ export class SearchService {
 
               // For now, get first 10 results
               // const urls = (await searchResult.jsonValue()).slice(0, 10)
-              const urls = (await searchResult.jsonValue()).slice(0, 2)
+              const urls = (await searchResult.jsonValue()).slice(0, 5)
 
               const pages: { url: string; page: Page }[] = []
               const promisesPages = []

@@ -94,14 +94,14 @@ create policy "Authenticated can select" on public.newsletters_topics_emails
     using (is_subscribed_to_newsletter_topic(auth.uid(), newsletter_topic_id));
 
 -- get all emails subscribed to a newsletter topic
-CREATE OR REPLACE FUNCTION public.get_newsletter_topic_emails(newsletter_topic_id UUID)
-    RETURNS TABLE(email character varying, name character varying) AS
+CREATE OR REPLACE FUNCTION public.get_emails_subscribed(newsletter_topic_id UUID)
+    RETURNS TABLE(email character varying, name text) AS
 $func$
 BEGIN
     RETURN QUERY
     SELECT DISTINCT
         u.email,
-        accounts.name
+        ba.name
     FROM 
         public.newsletters_accounts_topic_subscription nte
     JOIN 
@@ -111,6 +111,6 @@ BEGIN
         auth.users u
         ON ba.primary_owner_user_id = u.id
     WHERE 
-        nte.newsletter_topic_id = get_newsletter_topic_emails.newsletter_topic_id;
+        nte.newsletter_topic_id = get_emails_subscribed.newsletter_topic_id;
 END
 $func$ LANGUAGE plpgsql;
