@@ -18,12 +18,12 @@ ALTER TABLE public.newsletters_topics ENABLE ROW LEVEL SECURITY;
 ----------------
 -- Authenticated users should be able to read all records regardless of account
 ----------------
-create policy "Authenticated can select" on public.newsletters_accounts_topic_subscription
+create policy "Authenticated can select" on public.newsletters_topics
     for select
     to authenticated
     using (true);    
 
-CREATE TABLE newsletters_accounts_topic_subscription (
+CREATE TABLE newsletters_topics_accounts_subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   account_id UUID NOT NULL references basejump.accounts(id) on delete cascade on update no action,
@@ -32,12 +32,12 @@ CREATE TABLE newsletters_accounts_topic_subscription (
 );
 
 -- enable RLS on the table
-ALTER TABLE public.newsletters_accounts_topic_subscription ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.newsletters_topics_accounts_subscriptions ENABLE ROW LEVEL SECURITY;
 
 -- --------------
 -- Postgres should be able to create records that are owned by an account they belong to
 -- --------------
-create policy "Postgres can insert" on public.newsletters_accounts_topic_subscription
+create policy "Postgres can insert" on public.newsletters_topics_accounts_subscriptions
     for insert
     to postgres
     with check (true);
@@ -45,7 +45,7 @@ create policy "Postgres can insert" on public.newsletters_accounts_topic_subscri
 ----------------
 -- Postgres should be able to delete records that are owned by an account they belong to
 ----------------
-create policy "Postgres can delete" on public.newsletters_accounts_topic_subscription
+create policy "Postgres can delete" on public.newsletters_topics_accounts_subscriptions
     for delete
     to postgres
     using (true);
@@ -53,7 +53,7 @@ create policy "Postgres can delete" on public.newsletters_accounts_topic_subscri
 ---------------
 -- Postgres should be able to update records that are owned by an account they belong to
 ---------------
-create policy "Postgres can update" on public.newsletters_accounts_topic_subscription
+create policy "Postgres can update" on public.newsletters_topics_accounts_subscriptions
     for update
     to postgres
     using (true);
@@ -61,7 +61,7 @@ create policy "Postgres can update" on public.newsletters_accounts_topic_subscri
 ----------------
 -- Authenticated users should be able to read all records regardless of account
 ----------------
-create policy "Authenticated can select" on public.newsletters_accounts_topic_subscription
+create policy "Authenticated can select" on public.newsletters_topics_accounts_subscriptions
     for select
     to authenticated
     using (true);

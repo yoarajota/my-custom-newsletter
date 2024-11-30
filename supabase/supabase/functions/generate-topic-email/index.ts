@@ -1,4 +1,3 @@
-import { Response } from "express"
 import Groq from "https://cdn.jsdelivr.net/npm/groq-sdk@0.7.0/+esm"
 import { marked } from "https://cdn.jsdelivr.net/npm/marked@15.0.2/+esm"
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
@@ -10,29 +9,29 @@ const BASE = `
   <tbody>
     <tr>
       <td>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 500px; margin: 0 auto;" width="500">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 31.25rem; margin: 0 auto;" width="500">
           <tbody>
             <tr>
-              <td width="100%" style="padding: 10px; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+              <td width="100%" style="padding: .625rem; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: .3125rem; padding-top: .3125rem; vertical-align: top; border-top: 0rem; border-right: 0rem; border-bottom: 0rem; border-left: 0rem;">
                 {CONTENT}
               </td>
             </tr>
             <tr>
-              <td width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px; margin: 10px; font-size: 1px; line-height: 1px; border-bottom: 1px solid #dddddd;">
+              <td width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: .3125rem; padding-top: .3125rem; vertical-align: top; border-top: 0rem; border-right: 0rem; border-bottom: 0rem; border-left: 0rem; margin: .625rem; font-size: .0625rem; line-height: .0625rem; border-bottom: .0625rem solid #dddddd;">
                 <span style="word-break: break-word;"></span>
               </td>
             </tr>
             <tr>
-              <td width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-                <div style="padding: 10px; color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
+              <td width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: .3125rem; padding-top: .3125rem; vertical-align: top; border-top: 0rem; border-right: 0rem; border-bottom: 0rem; border-left: 0rem;">
+                <div style="padding: .625rem; color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:1rem;font-weight:400;letter-spacing:0rem;line-height:120%;text-align:left;mso-line-height-alt:1.2rem;">
                   <p style="margin: 0;">As informações desta newsletter foram retiradas de;</p>
                 </div>
                 <br>
-                <div style="padding: 10px; margin-left:-20px">
+                <div style="padding: .625rem; margin-left:-1.25rem">
                   {CREDITS}
                 </div>
                 <br>
-                <div style="padding: 10px; color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
+                <div style="padding: .625rem; color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:1rem;font-weight:400;letter-spacing:0rem;line-height:120%;text-align:left;mso-line-height-alt:1.2rem;">
                   <p style="margin: 0;">Considere ler o conteúdo original para mais informações. <strong>Créditos totais aos autores originais.</strong></p>
                 </div>
               </td>
@@ -57,7 +56,7 @@ const generator = async (content: string) => {
     messages: [
       {
         role: "system",
-        content: `You are a newsletter writer specializing in creating rich content in Portuguese. Summarize information from web pages into a single email, structuring text into paragraphs, adding relevant headings, and maintaining correct context. Respond exclusively in Markdown format using: Headings ('#', '##', '###'), Bold ('**bold text**'), Italic ('*italicized text*'), Blockquote ('> blockquote'), Ordered Lists ('1. First item 2. Second item'), Unordered Lists ('- First item - Second item'), and Horizontal Rules ('---').`,
+        content: `You are a newsletter writer specializing in creating rich content in Portuguese. Summarize information from web pages into a single email, structuring text into paragraphs, adding relevant headings, avoiding repetitions and maintaining correct context. Respond exclusively in Markdown format using: Headings ('#', '##', '###'), Bold ('**bold text**'), Italic ('*italicized text*'), Blockquote ('> blockquote'), Ordered Lists ('1. First item 2. Second item'), Unordered Lists ('- First item - Second item'), and Horizontal Rules ('---').`,
       },
       {
         role: "user",
@@ -74,14 +73,14 @@ const generator = async (content: string) => {
 
 function HEADER(tag = "h1") {
   return `
-<${tag} style="padding: 10px; margin: 0; color: #1e0e4b; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 38px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 45.6px;">
+<${tag} style="padding: .625rem; margin: 0; color: #1e0e4b; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 2.375rem; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 2.85rem;">
   <span style="word-break: break-word;">{TITLE}</span>
 </${tag}>
 `
 }
 
 const PARAGRAPH = `
-<div style="padding: 10px; color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
+<div style="padding: .625rem; color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:1rem;font-weight:400;letter-spacing:0rem;line-height:120%;text-align:left;mso-line-height-alt:1.2rem;">
   <p style="margin: 0;">{PARAGRAPH}</p>
 </div>
 `
@@ -132,7 +131,7 @@ async function sendEmails(
   return await fetch("https://api.sendgrid.com/v3/mail/send", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+      Authorization: `Bearer ${Deno.env.get("SENDGRID_API_KEY")}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -145,7 +144,7 @@ async function sendEmails(
       ],
       from: {
         email: "joaovbscontato@gmail.com",
-        name: "João",
+        name: "João from My Custom Newsletter",
       },
     }),
   })
@@ -195,11 +194,14 @@ serve(async (req) => {
         year: "numeric",
       })}`
 
-      const emailsSubscribed = await admin.rpc("get_emails_subscribed", {
+      const { data: emailsSubscribed } = await admin.rpc("get_emails_subscribed", {
         newsletter_topic_id,
       })
 
-      const response = await sendEmails(emailsSubscribed, emailSubject, emailHtml)
+      let response = { ok: true, text: () => "" as any, status: 200 }
+      if (emailsSubscribed?.length) {
+        response = await sendEmails(emailsSubscribed, emailSubject, emailHtml)
+      }
 
       if (response.ok) {
         await admin.from("newsletters_topics_emails").insert({
@@ -216,6 +218,8 @@ serve(async (req) => {
       message: "Email generated",
     })
   } catch (err) {
+    console.log(err)
+
     return error({
       message: "Error",
     })

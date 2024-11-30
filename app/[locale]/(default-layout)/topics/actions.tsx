@@ -11,7 +11,7 @@ export const getUserTopics = async (account_id?: string) => {
   const supabase = createClient()
 
   const { data } = await supabase
-    .from("newsletters_accounts_topic_subscription")
+    .from("newsletters_topics_accounts_subscriptions")
     .select("newsletters_topics(id, name, summary)")
     .eq("account_id", account_id)
 
@@ -26,6 +26,8 @@ export const getAllEmailsFromTopic = async (topic_id: string) => {
     .select()
     .eq("newsletter_topic_id", topic_id)
     .order("created_at", { ascending: false })
+
+  console.log(error)
 
   return data
 }

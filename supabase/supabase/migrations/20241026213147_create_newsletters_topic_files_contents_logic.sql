@@ -9,11 +9,11 @@ BEGIN
         EXISTS(
         SELECT 1
         FROM
-            public.newsletters_topics_emails
+            public.newsletters_topics_accounts_subscriptions
         WHERE
-            newsletter_topic_id = newsletter_topic_id
-            AND account_id = (
-                select account_id from basejump.accounts where primary_owner_user_id = user_id
+            newsletters_topics_accounts_subscriptions.newsletter_topic_id = is_subscribed_to_newsletter_topic.newsletter_topic_id
+            AND newsletters_topics_accounts_subscriptions.account_id = (
+                select basejump.accounts.id from basejump.accounts where primary_owner_user_id = user_id
             )
         )
     INTO subscribed;
@@ -95,15 +95,17 @@ create policy "Authenticated can select" on public.newsletters_topics_emails
 
 -- get all emails subscribed to a newsletter topic
 CREATE OR REPLACE FUNCTION public.get_emails_subscribed(newsletter_topic_id UUID)
-    RETURNS TABLE(email character varying, name text) AS
-$func$
+    RETURNS TABLE(email character varying, name text)
+    LANGUAGE plpgsql
+    SECURITY DEFINER
+AS $func$
 BEGIN
     RETURN QUERY
     SELECT DISTINCT
         u.email,
         ba.name
     FROM 
-        public.newsletters_accounts_topic_subscription nte
+        public.newsletters_topics_accounts_subscriptions nte
     JOIN 
         basejump.accounts ba 
         ON nte.account_id = ba.id
@@ -113,4 +115,4 @@ BEGIN
     WHERE 
         nte.newsletter_topic_id = get_emails_subscribed.newsletter_topic_id;
 END
-$func$ LANGUAGE plpgsql;
+$func$;

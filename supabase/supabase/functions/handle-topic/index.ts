@@ -94,7 +94,7 @@ serve(async (req) => {
 
     const account = await getUserAccount(supabase)
 
-    await admin.from("newsletters_accounts_topic_subscription").insert({
+    await admin.from("newsletters_topics_accounts_subscriptions").insert({
       newsletter_topic_id: newsletterTopic?.id,
       account_id: account.account_id,
     })
