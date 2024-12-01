@@ -23,11 +23,14 @@ export const getAllEmailsFromTopic = async (topic_id: string) => {
 
   const { data, error } = await supabase
     .from("newsletters_topics_emails")
-    .select()
+    .select("id, html")
     .eq("newsletter_topic_id", topic_id)
     .order("created_at", { ascending: false })
 
-  console.log(error)
+  if (error) {
+    console.error("Error fetching emails:", error)
+    return []
+  }
 
-  return data
+  return (data ?? []) as { id: string; html: string }[]
 }

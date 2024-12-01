@@ -1,7 +1,9 @@
 -- Function to test if a user is subscribed to a newsletter topic
 CREATE OR REPLACE FUNCTION public.is_subscribed_to_newsletter_topic(user_id UUID, newsletter_topic_id UUID)
-  RETURNS BOOLEAN AS
-$func$
+  RETURNS BOOLEAN
+  LANGUAGE plpgsql
+  SECURITY DEFINER
+AS $func$
 DECLARE
   subscribed BOOLEAN;
 BEGIN
@@ -13,16 +15,20 @@ BEGIN
         WHERE
             newsletters_topics_accounts_subscriptions.newsletter_topic_id = is_subscribed_to_newsletter_topic.newsletter_topic_id
             AND newsletters_topics_accounts_subscriptions.account_id = (
-                select basejump.accounts.id from basejump.accounts where primary_owner_user_id = user_id
+                SELECT basejump.accounts.id FROM basejump.accounts WHERE primary_owner_user_id = user_id
             )
         )
     INTO subscribed;
     RETURN subscribed;
 END
-$func$ LANGUAGE plpgsql;
+$func$;
+
+-- Grant necessary permissions
+GRANT EXECUTE ON FUNCTION public.is_subscribed_to_newsletter_topic TO authenticated;
+GRANT SELECT ON public.newsletters_topics_accounts_subscriptions TO authenticated;
+GRANT SELECT ON basejump.accounts TO authenticated;
 
 -- topics table for newsletters
-
 CREATE TABLE newsletters_topic_files_contents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
