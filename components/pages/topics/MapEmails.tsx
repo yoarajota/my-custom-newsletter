@@ -2,70 +2,42 @@
 
 import { Dispatch, SetStateAction, useState } from "react"
 import { Button } from "@components/ui/button"
-import { Card, CardContent, CardFooter } from "@components/ui/card"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@components/ui/carousel"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@components/ui/dialog"
-import { Input } from "@components/ui/input"
-import { Label } from "@components/ui/label"
-import { DialogEmailVisualizer } from "./DialogEmailVisualizer"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@components/ui/card"
+import { Dialog, DialogTrigger } from "@components/ui/dialog"
 
 interface EmailCardProps {
   id: string
   html: string
+  date: string
   setSelectedEmailHtml: Dispatch<SetStateAction<string | null>>
 }
 
-function EmailCard({ id, html, setSelectedEmailHtml }: EmailCardProps) {
+function EmailCard({ id, date, html, setSelectedEmailHtml }: EmailCardProps) {
+  const dateStr = new Date(date).toLocaleDateString()
+
   return (
-    <Card className="flex h-[200px] w-[300px] flex-col">
-      <CardContent className="grow overflow-hidden p-4">
-        <div className="mb-2 text-sm font-medium">Email ID: {id}</div>
-        <div
-          className="overflow-hidden text-xs text-muted-foreground"
-          style={{ display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical" }}
-        >
-          {html}
-        </div>
-      </CardContent>
-      <CardFooter className="p-2">
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="w-full" onClick={() => setSelectedEmailHtml(html)}>
-            View Full Email
-          </Button>
-        </DialogTrigger>
-      </CardFooter>
+    <Card className="cursor-pointer flex-col" onClick={() => setSelectedEmailHtml(html)}>
+      <CardHeader>
+        <CardTitle>Newsletter de {dateStr}</CardTitle>
+      </CardHeader>
     </Card>
   )
 }
 
-export function MapEmails({ emails }: { emails: { id: string; html: string }[] }) {
+export function MapEmails({ emails }: { emails: { id: string; html: string; created_at: string }[] }) {
   const [selectedEmailHtml, setSelectedEmailHtml] = useState<null | string>(null)
 
   return (
-    <>
-      <Dialog>
-        <Carousel className="mx-auto w-full max-w-xs">
-          <CarouselContent>
-            {emails.map(({ html, id }) => (
-              <CarouselItem key={id}>
-                <EmailCard id={id} html={html} setSelectedEmailHtml={setSelectedEmailHtml} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+    <div className="flex gap-4">
+      <div className="flex w-1/2 flex-col gap-4">
+        {emails.map(({ html, created_at, id }) => (
+          <div key={id}>
+            <EmailCard id={id} date={created_at} html={html} setSelectedEmailHtml={setSelectedEmailHtml} />
+          </div>
+        ))}
+      </div>
 
-        <DialogEmailVisualizer html={selectedEmailHtml} />
-      </Dialog>
-    </>
+      {selectedEmailHtml && <span className="flex-1" dangerouslySetInnerHTML={{ __html: selectedEmailHtml ?? "" }} />}
+    </div>
   )
 }

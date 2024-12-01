@@ -23,7 +23,7 @@ export const getAllEmailsFromTopic = async (topic_id: string) => {
 
   const { data, error } = await supabase
     .from("newsletters_topics_emails")
-    .select("id, html")
+    .select("id, html, created_at")
     .eq("newsletter_topic_id", topic_id)
     .order("created_at", { ascending: false })
 
@@ -32,5 +32,5 @@ export const getAllEmailsFromTopic = async (topic_id: string) => {
     return []
   }
 
-  return (data ?? []) as { id: string; html: string }[]
+  return (data ?? []) as { id: string; html: string; created_at: string }[]
 }
