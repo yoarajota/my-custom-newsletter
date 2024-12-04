@@ -1,90 +1,21 @@
-import { Bell, Home, LineChart, LucideIcon, Package, Package2, ShoppingCart, Users } from "lucide-react"
-import { headers } from "next/headers"
+import { Bell, Package2 } from "lucide-react"
 import Link from "next/link"
-import { memo } from "react"
-import { Badge } from "@components/ui/badge"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { getBillingStatus, subscribeToDefaultPlan } from "app/[locale]/actions"
+import { getInitials } from "@lib/utils"
 import config from "app-config"
-import { Auth } from "types/auth"
+import { Auth, BillingStatus } from "types/auth"
+import NavItem from "./NavItem"
 import UpgradeButton from "./UpgradeButton"
+import { NAV_ITEMS } from "../utils"
 const { app_name } = config
 
-const NavItem = ({
-  Icon,
-  title,
-  active,
-  href,
-  badge,
-}: {
-  Icon: LucideIcon
-  title: string
-  active?: boolean
-  href: string
-  badge?: number
-}) => {
-  return (
-    <Link
-      href={href}
-      className={
-        "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary" +
-        (active ? " text-primary" : " text-muted-foreground")
-      }
-    >
-      {Icon && <Icon className="size-4" />}
-      <>{title}</>
-      {badge && (
-        <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">{badge}</Badge>
-      )}
-    </Link>
-  )
-}
-
-// Definindo o displayName para o componente memoizado
-NavItem.displayName = "NavItem"
-
-export default async function Navbar({ auth }: { auth: Auth }) {
-  const billingStatus = await getBillingStatus()
-
-  const heads = headers()
-
-  const url = heads.get("referer")
-
+export default async function Navbar({ auth, billingStatus }: { auth: Auth; billingStatus: BillingStatus }) {
   let subscriptionActive: boolean = false
 
   if (billingStatus) {
     subscriptionActive = billingStatus.subscription_active
   }
-
-  const navItems = [
-    {
-      Icon: Home,
-      title: "Dashboard",
-      href: "/dashboard",
-    },
-    // {
-    //   Icon: ShoppingCart,
-    //   title: "Orders",
-    //   href: "/orders",
-    //   badge: 6,
-    // },
-    // {
-    //   Icon: Package,
-    //   title: "Products",
-    //   href: "/products",
-    // },
-    // {
-    //   Icon: Users,
-    //   title: "Customers",
-    //   href: "/customers",
-    // },
-    // {
-    //   Icon: LineChart,
-    //   title: "Analytics",
-    //   href: "/analytics",
-    // },
-  ]
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
@@ -92,7 +23,7 @@ export default async function Navbar({ auth }: { auth: Auth }) {
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <Package2 className="size-6" />
-            <span className="">{app_name}</span>
+            <span>{getInitials(app_name)}</span>
           </Link>
           <Button variant="outline" size="icon" className="ml-auto size-8">
             <Bell className="size-4" />
@@ -101,8 +32,8 @@ export default async function Navbar({ auth }: { auth: Auth }) {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            {navItems.map((item, index) => (
-              <NavItem key={index} {...item} active={url?.includes?.(item.href)} />
+            {NAV_ITEMS.map((item, index) => (
+              <NavItem key={index} {...item} />
             ))}
           </nav>
         </div>

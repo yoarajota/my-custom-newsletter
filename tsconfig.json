@@ -40,5 +40,5 @@
     "jest.config.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "supabase"]
+  "exclude": ["node_modules", "supabase", "scrapper"]
 }

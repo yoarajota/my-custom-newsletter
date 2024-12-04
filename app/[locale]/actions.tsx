@@ -182,8 +182,6 @@ export async function getPlans() {
 }
 
 export async function getBillingStatus(): Promise<BillingStatus> {
-  console.log("getBillingStatus")
-
   // if (billingState.billingStatus) {
   //   return billingState.billingStatus
   // }
@@ -207,8 +205,6 @@ export async function getBillingStatus(): Promise<BillingStatus> {
           },
         },
       })
-
-      console.log("data", data)
 
       if (error) {
         console.log(error)
@@ -252,6 +248,8 @@ export async function subscribeToDefaultPlan(account_id: string | undefined) {
       },
     },
   })
+
+  console.log(error)
 
   return data.url
 }
