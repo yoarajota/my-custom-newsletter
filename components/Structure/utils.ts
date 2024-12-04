@@ -8,5 +8,6 @@ export const NAV_ITEMS = [
     icon: "Scroll",
     title: "Topics",
     href: "/topics",
+    need_plan: true,
   },
 ]

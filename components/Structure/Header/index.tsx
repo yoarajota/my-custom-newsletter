@@ -1,5 +1,6 @@
 import { Menu, Package2, Search } from "lucide-react"
 import Link from "next/link"
+import { useMemo } from "react"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { Input } from "@components/ui/input"
@@ -12,6 +13,10 @@ import { NAV_ITEMS } from "../utils"
 const { app_name } = config
 
 export default async function Header({ auth, billingStatus }: { auth: Auth; billingStatus: BillingStatus }) {
+  const realMenuItems = useMemo(() => {
+    return NAV_ITEMS.filter((item) => (billingStatus.billing_enabled && item.need_plan) || !item.need_plan)
+  }, [billingStatus])
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -27,7 +32,7 @@ export default async function Header({ auth, billingStatus }: { auth: Auth; bill
               <Package2 className="size-6" />
               <span className="sr-only">{app_name}</span>
             </Link>
-            {NAV_ITEMS.map((item, index) => (
+            {realMenuItems.map((item, index) => (
               <NavItem key={index} {...item} />
             ))}
           </nav>

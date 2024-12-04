@@ -1,5 +1,6 @@
 import { Bell, Package2 } from "lucide-react"
 import Link from "next/link"
+import { useMemo } from "react"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { getInitials } from "@lib/utils"
@@ -17,6 +18,10 @@ export default async function Navbar({ auth, billingStatus }: { auth: Auth; bill
     subscriptionActive = billingStatus.subscription_active
   }
 
+  const realMenuItems = useMemo(() => {
+    return NAV_ITEMS.filter((item) => (billingStatus.billing_enabled && item.need_plan) || !item.need_plan)
+  }, [billingStatus])
+
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -32,7 +37,7 @@ export default async function Navbar({ auth, billingStatus }: { auth: Auth; bill
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            {NAV_ITEMS.map((item, index) => (
+            {realMenuItems.map((item, index) => (
               <NavItem key={index} {...item} />
             ))}
           </nav>
