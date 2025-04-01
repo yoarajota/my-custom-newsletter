@@ -1,4 +1,4 @@
-### MY CUSTOM NEWSLETTER
+# MY CUSTOM NEWSLETTER
 
 ## AI-Powered Automated Newsletter System
 This project is a fully automated, AI-driven newsletter system that leverages embeddings, RAG (Retrieval-Augmented Generation), and web scraping to curate and deliver personalized content.
