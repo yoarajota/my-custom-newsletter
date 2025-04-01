@@ -1,27 +1,8 @@
 # 🚀 Express TypeScript Boilerplate 2024
 
-[![Build](https://github.com/edwinhern/express-typescript-2024/actions/workflows/build.yml/badge.svg)](https://github.com/edwinhern/express-typescript-2024/actions/workflows/build.yml)
-[![Test](https://github.com/edwinhern/express-typescript-2024/actions/workflows/test.yml/badge.svg)](https://github.com/edwinhern/express-typescript-2024/actions/workflows/test.yml)
-[![Code Quality](https://github.com/edwinhern/express-typescript-2024/actions/workflows/code-quality.yml/badge.svg)](https://github.com/edwinhern/express-typescript-2024/actions/workflows/code-quality.yml)
-[![Docker Image CI](https://github.com/edwinhern/express-typescript-2024/actions/workflows/docker-image.yml/badge.svg)](https://github.com/edwinhern/express-typescript-2024/actions/workflows/docker-image.yml)
-
-``` code
-Hey There! 🙌 
-🤾 that ⭐️ button if you like this boilerplate. 
-```
-
 ## 🌟 Introduction
 
-Welcome to the Express TypeScript Boilerplate 2024 – a streamlined, efficient, and scalable foundation for building powerful backend services with modern tools and practices in Express.js and TypeScript.
-
-## 💡 Motivation
-
-This boilerplate aims to:
-
-- ✨ Reduce setup time for new projects
-- 📊 Ensure code consistency and quality
-- ⚡  Facilitate rapid development
-- 🛡️ Encourage best practices in security, testing, and performance
+This part of the project is responsible to make web scrapping to get the contents for the newsletters.
 
 ## 🚀 Features
 
@@ -39,12 +20,9 @@ This boilerplate aims to:
 - 🐳 Docker Support: Ready for containerization and deployment
 - 📝 Input Validation with Zod: Strongly typed request validation using `Zod`
 - 🧩 Swagger UI: Interactive API documentation generated from Zod schemas
+- 🕷️ Puppeteer: used for crate auto GUI.
 
 ## 🛠️ Getting Started
-
-### Video Demo
-
-For a visual guide, watch the [video demo](https://github.com/user-attachments/assets/b1698dac-d582-45a0-8d61-31131732b74e) to see the setup and running of the project.
 
 ### Step-by-Step Guide
 
@@ -64,9 +42,3 @@ For a visual guide, watch the [video demo](https://github.com/user-attachments/a
 - Development Mode: `npm run dev`
 - Building: `npm run build`
 - Production Mode: Set `.env` to `NODE_ENV="production"` then `npm run build && npm run start`
-
-## 🤝 Feedback and Contributions
-
-We'd love to hear your feedback and suggestions for further improvements. Feel free to contribute and join us in making backend development cleaner and faster!
-
-🎉 Happy coding!
