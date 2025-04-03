@@ -1,4 +1,4 @@
-# 🚀 Express TypeScript Boilerplate 2024
+# 🚀 Express.js RESTFUL API WEB Resources Scrapper for MY CUSTOM NEWSLETTER
 
 ## 🌟 Introduction
 
@@ -6,6 +6,7 @@ This part of the project is responsible to make web scrapping to get the content
 
 ## 🚀 Features
 
+- 🕷️ Puppeteer: used for crate auto GUI.
 - 📁 Modular Structure: Organized by feature for easy navigation and scalability
 - 💨 Faster Execution with tsx: Rapid TypeScript execution with `tsx` and type checking with `tsc`
 - 🌐 Stable Node Environment: Latest LTS Node version in `.nvmrc`
@@ -20,7 +21,6 @@ This part of the project is responsible to make web scrapping to get the content
 - 🐳 Docker Support: Ready for containerization and deployment
 - 📝 Input Validation with Zod: Strongly typed request validation using `Zod`
 - 🧩 Swagger UI: Interactive API documentation generated from Zod schemas
-- 🕷️ Puppeteer: used for crate auto GUI.
 
 ## 🛠️ Getting Started
 
@@ -28,9 +28,7 @@ This part of the project is responsible to make web scrapping to get the content
 
 #### Step 1: 🚀 Initial Setup
 
-- Clone the repository: `git clone https://github.com/edwinhern/express-typescript-2024.git`
-- Navigate: `cd express-typescript-2024`
-- Install dependencies: `npm ci`
+- Install dependencies: `npm intall`
 
 #### Step 2: ⚙️ Environment Configuration
 
