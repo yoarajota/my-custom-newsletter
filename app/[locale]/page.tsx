@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm dark:bg-slate-950/80">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
