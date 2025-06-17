@@ -1,7 +1,7 @@
 import { Button } from "@components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { Badge } from "@components/ui/badge"
-import { CheckCircle, Zap, Brain, Mail, ArrowRight, Sparkles, Globe, Users } from "lucide-react"
+import { ArrowRight, Brain, CheckCircle, Globe, Mail, Sparkles, Users, Zap } from "lucide-react"
 import Link from "next/link"
 
 export default function HomePage() {
