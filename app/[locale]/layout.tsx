@@ -15,7 +15,7 @@ export default async function RootLayout({ children, params: { locale } }: Reado
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={cn("flex min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+      <body className={cn("flex min-h-screen w-screen bg-background font-sans antialiased", fontSans.variable)}>
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
 
         <Toaster />
