@@ -1,65 +1,41 @@
-# MY CUSTOM NEWSLETTER
+# My Custom Newsletter
 
-## AI-Powered Automated Newsletter System
-This project is a fully automated, AI-driven newsletter system that leverages embeddings, RAG (Retrieval-Augmented Generation), and web scraping to curate and deliver personalized content.
+AI-powered newsletter SaaS that curates and delivers personalized content using embeddings, RAG, and web scraping.
 
-## Key Features
-- Automated Workflow: Background jobs handle content aggregation, processing, and delivery.
-- AI-Powered Content: Uses embeddings and RAG for intelligent content generation.
-- Seamless Integration: Built with SendGrid for reliable email distribution.
+## What it does
 
-A scalable solution for generating and sending data-driven newsletters with minimal manual intervention. Builded to be a Saas.
+Users subscribe to topics. The system aggregates, processes, and delivers curated newsletter emails for each topic — with minimal manual intervention.
 
-## 🎯 FRONTEND  information
+## Tech Stack
 
-- 🏎️ **[Next.js](https://nextjs.org/)** - Fast by default, with config optimized for performance (with **App Directory**)
-- 💅 **[Tailwind CSS](https://tailwindcss.com/)** - A utility-first CSS framework for rapid UI development
-- ✨ **[ESlint](https://eslint.org/)** and **[Prettier](https://prettier.io/)** - For clean, consistent, and error-free code
-- 🛠️ **[Extremely strict TypeScript](https://www.typescriptlang.org/)** - With [`ts-reset`](https://github.com/total-typescript/ts-reset) library for ultimate type safety
-- 🚀 **[GitHub Actions](https://github.com/features/actions)** - Pre-configured actions for smooth workflows, including Bundle Size and performance stats
-- 💯 **Perfect Lighthouse score** - Because performance matters
-- **[Bundle analyzer plugin](https://www.npmjs.com/package/@next/bundle-analyzer)** - Keep an eye on your bundle size
-- **[Jest](https://jestjs.io/)** and **[React Testing Library](https://testing-library.com/react)** - For rock-solid unit and integration tests
-- **[Playwright](https://playwright.dev/)** - Write end-to-end tests like a pro
-- **[Storybook](https://storybook.js.org/)** - Create, test, and showcase your components
-- **Smoke Testing** and **Acceptance Tests** - For confidence in your deployments
-- **[Conventional commits git hook](https://www.conventionalcommits.org/)** - Keep your commit history neat and tidy
-- **[Observability](https://opentelemetry.io/)** - Open Telemetry integration for seamless monitoring
-- **[Absolute imports](https://nextjs.org/docs/advanced-features/module-path-aliases)** - No more spaghetti imports
-- **[Health checks](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)** - Kubernetes-compatible for robust deployments
-- **[Radix UI](https://www.radix-ui.com/)** - Headless UI components for endless customization
-- **[CVA](http://cva.style/)** - Create a consistent, reusable, and atomic design system
-- **[Renovate BOT](https://www.whitesourcesoftware.com/free-developer-tools/renovate)** - Auto-updating dependencies, so you can focus on coding
-- **[Patch-package](https://www.npmjs.com/package/patch-package)** - Fix external dependencies without losing your mind
-- **Components coupling and cohesion graph** - A tool for managing component relationships
-- **[Automated ChatGPT Code Reviews](https://openai.com/chatgpt)** - **Stay on the cutting edge with AI-powered code reviews!**
-- **[Semantic Release](https://github.com/semantic-release/semantic-release)** - for automatic changelog
-- **[T3 Env](https://env.t3.gg/)** - Manage your environment variables with ease
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript (strict)
+- **Database:** Supabase (PostgreSQL + Auth + Edge Functions)
+- **Payments:** Stripe (via Supabase Edge Functions)
+- **UI:** Radix UI + TailwindCSS + shadcn/ui
+- **i18n:** Locale-based routing (en / pt)
+- **CI/CD:** GitHub Actions, semantic-release
+- **Testing:** Jest + Playwright
 
-## Run the development server:
+## Features
+
+- Email/password authentication via Supabase Auth
+- Stripe billing with subscription management
+- Topic-based newsletter subscriptions
+- Server-rendered dashboard with real-time data
+- Edge Function pipeline for newsletter generation (RAG + embeddings)
+- i18n support (English and Portuguese)
+- Responsive landing page with pricing
+
+## Getting Started
 
 ```bash
-yarn dev
+cp .env.example .env.local
+# Fill in Supabase and Stripe credentials
+npm install
+npm run dev
 ```
 
-## 📃 Scripts Overview
+## Status
 
-The following scripts are available in the `package.json`:
-
-- `dev`: Starts the development server with colorized output
-- `build`: Builds the app for production
-- `start`: Starts the production server
-- `lint`: Lints the code using ESLint
-- `lint:fix`: Automatically fixes linting errors
-- `prettier`: Checks the code for proper formatting
-- `prettier:fix`: Automatically fixes formatting issues
-- `analyze`: Analyzes the bundle sizes for Client, Server and Edge environments
-- `storybook`: Starts the Storybook server
-- `build-storybook`: Builds the Storybook for deployment
-- `test`: Runs unit and integration tests
-- `e2e:headless`: Runs end-to-end tests in headless mode
-- `e2e:ui`: Runs end-to-end tests with UI
-- `format`: Formats the code with Prettier
-- `postinstall`: Applies patches to external dependencies
-- `preinstall`: Ensures the project is installed with Yarn
-- `coupling-graph`: **Generates a coupling and cohesion graph for the components**
+Functional SaaS with auth, billing, and topic management. The newsletter generation pipeline runs on Supabase Edge Functions.
